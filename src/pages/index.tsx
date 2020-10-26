@@ -1,5 +1,8 @@
+import SEO from "../utilities/SEO";
+
 const Home = () => (
   <>
+    <SEO />
     <div className="holder">
       <div>
         <h1>Love Lines</h1>
