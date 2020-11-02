@@ -97,9 +97,7 @@ const NewStory = () => {
             </div>
           ))}
           <div className="button-container">
-            <div className="button-holder">
-              <button onClick={() => setNumLines((l) => l + 1)}>+</button>
-            </div>
+            <button onClick={() => setNumLines((l) => l + 1)}>+</button>
           </div>
         </div>
       </div>
@@ -119,9 +117,9 @@ const NewStory = () => {
             overflow-x: auto;
             overflow-y: hidden;
             white-space: nowrap;
-            display: inline-block;
           }
-          .line-holder {
+          .line-holder,
+          .button-container {
             display: inline-block;
             width: 400px;
             height: 100%;
@@ -130,18 +128,15 @@ const NewStory = () => {
             margin-left: 10px;
             margin-right: 10px;
           }
+
           .button-container {
-            display: inline-block;
+            position: absolute;
             height: 100%;
             width: 30px;
-            overflow-y: auto;
-            margin-left: 10px;
-            margin-right: 10px;
           }
-          .button-holder {
+
+          .button-container button {
             height: 100%;
-            width: 100%;
-            display: flex;
           }
         `}
       </style>
