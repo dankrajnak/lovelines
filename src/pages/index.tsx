@@ -1,3 +1,4 @@
+import Colors from "../styles/colors";
 import SEO from "../utilities/SEO";
 
 const Circle = (props: { color: string }) => {
@@ -21,9 +22,9 @@ const Home = () => (
       <div>
         <h1>
           LoveLines
-          <Circle color="#D95525" />
-          <Circle color="#6D99AD" />
-          <Circle color="#D7A164" />
+          <Circle color={Colors.red} />
+          <Circle color={Colors.blue} />
+          <Circle color={Colors.orange} />
         </h1>
         <div className="description">Under construction</div>
       </div>
