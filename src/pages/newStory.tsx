@@ -46,7 +46,6 @@ const NewStory = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: Colors.white,
                   }}
                 >
                   {new Intl.DateTimeFormat("default", {
@@ -56,7 +55,7 @@ const NewStory = () => {
                 </td>
                 <td
                   style={{
-                    backgroundColor: i % 5 && redToWhite((i % 5) / 4),
+                    backgroundColor: redToWhite((i % 5) / 4),
                   }}
                 />
                 <td />
@@ -112,14 +111,17 @@ const NewStory = () => {
           .line-holder .line {
             table-layout: fixed;
 
-            order-spacing: 5px;
-
+            border-spacing: 20px;
              {
               /* box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff; */
             }
+            background-color: ${Colors.white};
 
             border-radius: 15px;
-            margin-right: 120px;
+            padding: 0 30px;
+             {
+              /* margin-right: 120px; */
+            }
           }
 
           .line th {
@@ -143,11 +145,14 @@ const NewStory = () => {
 
           .line-holder .line td {
             width: 150px;
-
-            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
           }
           .line-holder .line tr td {
             height: 60px;
+          }
+          .line-holder .line tbody tr td:not(:nth-child(1)) {
+            border-radius: 10px;
+            box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
+            background-color: ${Colors.white};
           }
         `}
       </style>
