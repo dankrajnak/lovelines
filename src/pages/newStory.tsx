@@ -1,41 +1,75 @@
 import ColorInterpolate from "color-interpolate";
+import { Fragment, useState } from "react";
 import Colors from "../styles/colors";
 import Circle from "../UI/Circle";
 import SEO from "../utilities/SEO";
 
+type LoveAmount = 1 | 2 | 3 | 4 | 5;
+const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange].map((color) => ({
+  color,
+  interpolator: ColorInterpolate([Colors.white, color]),
+}));
 const totalCount = 200;
-const redToWhite = ColorInterpolate([Colors.white, Colors.red]);
-const blueToWhite = ColorInterpolate([Colors.blue, Colors.white]);
+const dates = new Array(totalCount).fill(0).map((_, i) => {
+  const date = new Date();
+  const newMonth = date.getMonth() - (i % 12);
+  const newYear = date.getFullYear() - Math.floor(i / 12);
+  date.setMonth(newMonth);
+  date.setFullYear(newYear);
+  return date;
+});
 
 const NewStory = () => {
-  const dates = new Array(totalCount).fill(0).map((_, i) => {
-    const date = new Date();
-    const newMonth = date.getMonth() - (i % 12);
-    const newYear = date.getFullYear() - Math.floor(i / 12);
-    date.setMonth(newMonth);
-    date.setFullYear(newYear);
-    return date;
-  });
+  const [love, setLove] = useState<
+    { love: LoveAmount; heartbreak: LoveAmount }[][]
+  >([
+    Array(totalCount).fill({
+      heartbreak: 0,
+      love: 0,
+    }),
+  ]);
+
   return (
     <>
       <SEO title="New Story" />
+      <div className="top-menu-holder">
+        <div className="buttons">
+          <button
+            onClick={() =>
+              setLove((l) => [
+                ...l,
+                Array(totalCount).fill({ heartbreak: 0, love: 0 }),
+              ])
+            }
+          >
+            +
+          </button>
+          <button
+            onClick={() =>
+              setLove((l) => l.slice(0, Math.max(1, l.length - 1)))
+            }
+          >
+            -
+          </button>
+        </div>
+      </div>
       <div className="line-holder">
         <table className="line">
           <thead>
             <tr>
               <th />
-              <th>
-                Love <Circle color={Colors.red} />
-              </th>
-              <th>
-                Heartbreak <Circle color={Colors.red} />
-              </th>
-              <th>
-                Love <Circle color={Colors.blue} />
-              </th>
-              <th>
-                Heartbreak <Circle color={Colors.blue} />
-              </th>
+              {love.map((_, i) => (
+                <Fragment key={i}>
+                  <th>
+                    Love{" "}
+                    <Circle color={LOVE_COLORS[i % LOVE_COLORS.length].color} />
+                  </th>
+                  <th>
+                    Heartbreak{" "}
+                    <Circle color={LOVE_COLORS[i % LOVE_COLORS.length].color} />
+                  </th>
+                </Fragment>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -53,18 +87,61 @@ const NewStory = () => {
                     year: "numeric",
                   }).format(dates[i])}
                 </td>
-                <td
-                  style={{
-                    backgroundColor: redToWhite((i % 5) / 4),
-                  }}
-                />
-                <td />
-                <td
-                  style={{
-                    backgroundColor: blueToWhite(((Math.random() * 6) % 5) / 4),
-                  }}
-                />
-                <td />
+                {love.map((line, lineI) => (
+                  <Fragment key={lineI}>
+                    <td
+                      style={{
+                        backgroundColor: LOVE_COLORS[
+                          lineI % LOVE_COLORS.length
+                        ].interpolator(line[i]?.love / 5 || 0),
+                      }}
+                      onClick={() =>
+                        setLove((sl) =>
+                          sl.map((sline, slineI) => {
+                            if (slineI === lineI) {
+                              return sline.map((slineLove, slineLoveI) =>
+                                slineLoveI === i
+                                  ? {
+                                      ...slineLove,
+                                      love: ((slineLove.love + 1) %
+                                        6) as LoveAmount,
+                                    }
+                                  : slineLove
+                              );
+                            }
+                            return sline;
+                          })
+                        )
+                      }
+                    />
+                    <td
+                      key={lineI}
+                      style={{
+                        backgroundColor: LOVE_COLORS[
+                          lineI % LOVE_COLORS.length
+                        ].interpolator(line[i]?.heartbreak / 5 || 0),
+                      }}
+                      onClick={() =>
+                        setLove((sl) =>
+                          sl.map((sline, slineI) => {
+                            if (slineI === lineI) {
+                              return sline.map((slineLove, slineLoveI) =>
+                                slineLoveI === i
+                                  ? {
+                                      ...slineLove,
+                                      heartbreak: ((slineLove.heartbreak + 1) %
+                                        6) as LoveAmount,
+                                    }
+                                  : slineLove
+                              );
+                            }
+                            return sline;
+                          })
+                        )
+                      }
+                    />
+                  </Fragment>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -73,10 +150,7 @@ const NewStory = () => {
       <style jsx>
         {`
           .top-menu-holder {
-            position: fixed;
-            top: 30px;
-            left: 0;
-            right: 0;
+            margin-top: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -84,19 +158,20 @@ const NewStory = () => {
             z-index: 3;
           }
           .top-menu-holder .buttons {
-            width: 400px;
             display: flex;
-            height: 30px;
-            border-radius: 8px;
-            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
-            background: #efeeee;
-
-            overflow-x: hidden;
           }
+
           .top-menu-holder .buttons button {
             flex-grow: 1;
             margin: 0;
             border: none;
+            background-color: #efeeee;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
+            background: #efeeee;
+            margin-left: 20px;
           }
           .top-menu-holder .buttons button:hover {
             cursor: pointer;
@@ -104,24 +179,18 @@ const NewStory = () => {
 
           .line-holder {
             display: flex;
-            width: 800px;
-            margin: 90px auto;
+            min-width: 800px;
+            margin: 40px auto;
           }
 
           .line-holder .line {
             table-layout: fixed;
 
             border-spacing: 20px;
-             {
-              /* box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff; */
-            }
             background-color: ${Colors.white};
 
             border-radius: 15px;
             padding: 0 30px;
-             {
-              /* margin-right: 120px; */
-            }
           }
 
           .line th {
@@ -149,10 +218,15 @@ const NewStory = () => {
           .line-holder .line tr td {
             height: 60px;
           }
+
           .line-holder .line tbody tr td:not(:nth-child(1)) {
             border-radius: 10px;
             box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
             background-color: ${Colors.white};
+          }
+
+          .line-holder .line tbody tr td:not(:nth-child(1)):hover {
+            cursor: pointer;
           }
         `}
       </style>
