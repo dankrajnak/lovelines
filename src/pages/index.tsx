@@ -1,19 +1,6 @@
 import Colors from "../styles/colors";
 import SEO from "../utilities/SEO";
-
-const Circle = (props: { color: string }) => {
-  const radius = 5;
-  return (
-    <svg width={radius * 2} height={radius * 2} style={{ marginLeft: 5 }}>
-      <circle
-        r={radius}
-        cx={radius}
-        cy={radius}
-        style={{ fill: props.color }}
-      />
-    </svg>
-  );
-};
+import Circle from "../UI/Circle";
 
 const Home = () => (
   <>
@@ -22,9 +9,9 @@ const Home = () => (
       <div>
         <h1>
           LoveLines
-          <Circle color={Colors.red} />
-          <Circle color={Colors.blue} />
-          <Circle color={Colors.orange} />
+          <Circle color={Colors.red} style={{ marginLeft: 5 }} />
+          <Circle color={Colors.blue} style={{ marginLeft: 5 }} />
+          <Circle color={Colors.orange} style={{ marginLeft: 5 }} />
         </h1>
         <div className="description">Under construction</div>
       </div>

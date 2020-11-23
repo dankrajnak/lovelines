@@ -1,9 +1,14 @@
-import { useState } from "react";
+import ColorInterpolate from "color-interpolate";
+import Colors from "../styles/colors";
+import Circle from "../UI/Circle";
 import SEO from "../utilities/SEO";
 
-const Line = () => {
-  const [numBoxes, setNumBoxes] = useState(20);
-  const dates = new Array(numBoxes).fill(0).map((_, i) => {
+const totalCount = 200;
+const redToWhite = ColorInterpolate([Colors.white, Colors.red]);
+const blueToWhite = ColorInterpolate([Colors.blue, Colors.white]);
+
+const NewStory = () => {
+  const dates = new Array(totalCount).fill(0).map((_, i) => {
     const date = new Date();
     const newMonth = date.getMonth() - (i % 12);
     const newYear = date.getFullYear() - Math.floor(i / 12);
@@ -11,132 +16,138 @@ const Line = () => {
     date.setFullYear(newYear);
     return date;
   });
-
-  return (
-    <>
-      <table>
-        <thead>
-          <th className="date" />
-          <th>Love</th>
-          <th>Heartbreak</th>
-        </thead>
-        <tbody>
-          {new Array(numBoxes).fill(0).map((_, index) => (
-            <tr key={index}>
-              <td className="date">
-                <span className="month">
-                  {new Intl.DateTimeFormat("default", {
-                    month: "short",
-                  }).format(dates[index])}
-                </span>{" "}
-                <span className="year">
-                  {new Intl.DateTimeFormat("default", {
-                    year: "numeric",
-                  }).format(dates[index])}
-                </span>
-              </td>
-              <td className="love" />
-              <td className="heartbreak" />
-            </tr>
-          ))}
-          <tr>
-            <td></td>
-            <td colSpan={2}>
-              <button onClick={() => setNumBoxes((b) => b + 12)}>+</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <style jsx>
-        {`
-          table {
-            border-collapse: collapse;
-          }
-
-          th {
-            width: 120px;
-          }
-
-          td.love,
-          td.heartbreak {
-            border: 1px black solid;
-            height: 30px;
-          }
-
-          td.date {
-            text-align: center;
-            vertical-align: middle;
-            color: #c1a478;
-            font-size: 0.8rem;
-            background-color: rgba(255, 255, 255, 0.4);
-          }
-
-          .month {
-            font-weight: bold;
-          }
-
-          button {
-            width: 100%;
-          }
-        `}
-      </style>
-    </>
-  );
-};
-
-const NewStory = () => {
-  const [numLines, setNumLines] = useState(1);
   return (
     <>
       <SEO title="New Story" />
-      <div className="container">
-        <div className="holder">
-          {new Array(numLines).fill(0).map((_, index) => (
-            <div className="line-holder" key={index}>
-              <Line />
-            </div>
-          ))}
-          <div className="button-container">
-            <button onClick={() => setNumLines((l) => l + 1)}>+</button>
-          </div>
-        </div>
+      <div className="line-holder">
+        <table className="line">
+          <thead>
+            <tr>
+              <th />
+              <th>
+                Love <Circle color={Colors.red} />
+              </th>
+              <th>
+                Heartbreak <Circle color={Colors.red} />
+              </th>
+              <th>
+                Love <Circle color={Colors.blue} />
+              </th>
+              <th>
+                Heartbreak <Circle color={Colors.blue} />
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {new Array(totalCount).fill(0).map((_, i) => (
+              <tr key={i}>
+                <td
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: Colors.white,
+                  }}
+                >
+                  {new Intl.DateTimeFormat("default", {
+                    month: "short",
+                    year: "numeric",
+                  }).format(dates[i])}
+                </td>
+                <td
+                  style={{
+                    backgroundColor: i % 5 && redToWhite((i % 5) / 4),
+                  }}
+                />
+                <td />
+                <td
+                  style={{
+                    backgroundColor: blueToWhite(((Math.random() * 6) % 5) / 4),
+                  }}
+                />
+                <td />
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <style jsx>
         {`
-          .container {
-            height: 100%;
-            width: 100%;
+          .top-menu-holder {
             position: fixed;
+            top: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            z-index: 3;
           }
-          .holder {
-            top: 20px;
-            left: 40px;
-            right: 40px;
-            bottom: 40px;
-            position: absolute;
-            overflow-x: auto;
-            overflow-y: hidden;
-            white-space: nowrap;
-          }
-          .line-holder,
-          .button-container {
-            display: inline-block;
+          .top-menu-holder .buttons {
             width: 400px;
-            height: 100%;
-            overflow-y: auto;
-            padding: 20px 0px;
-            margin-left: 10px;
-            margin-right: 10px;
+            display: flex;
+            height: 30px;
+            border-radius: 8px;
+            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
+            background: #efeeee;
+
+            overflow-x: hidden;
+          }
+          .top-menu-holder .buttons button {
+            flex-grow: 1;
+            margin: 0;
+            border: none;
+          }
+          .top-menu-holder .buttons button:hover {
+            cursor: pointer;
           }
 
-          .button-container {
-            position: absolute;
-            height: 100%;
-            width: 30px;
+          .line-holder {
+            display: flex;
+            width: 800px;
+            margin: 90px auto;
           }
 
-          .button-container button {
-            height: 100%;
+          .line-holder .line {
+            table-layout: fixed;
+
+            order-spacing: 5px;
+
+             {
+              /* box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff; */
+            }
+
+            border-radius: 15px;
+            margin-right: 120px;
+          }
+
+          .line th {
+            font-weight: lighter;
+            padding-bottom: 10px;
+          }
+
+          .line tbody tr:first-child td:first-child {
+            border-top-left-radius: 8px;
+          }
+          .line tbody tr:first-child td:last-child {
+            border-top-right-radius: 8px;
+          }
+
+          .line tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+          }
+          .line tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+          }
+
+          .line-holder .line td {
+            width: 150px;
+
+            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
+          }
+          .line-holder .line tr td {
+            height: 60px;
           }
         `}
       </style>
