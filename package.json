@@ -11,11 +11,13 @@
     "color-interpolate": "^1.0.5",
     "next": "10.0.3",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-popover": "^0.5.10"
   },
   "devDependencies": {
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
+    "@types/react-popover": "^0.5.3",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
     "babel-eslint": "^10.1.0",

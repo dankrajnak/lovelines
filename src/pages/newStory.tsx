@@ -1,15 +1,26 @@
 import ColorInterpolate from "color-interpolate";
+import Popover from "react-popover";
 import { Fragment, useState } from "react";
 import Colors from "../styles/colors";
 import Circle from "../UI/Circle";
 import SEO from "../utilities/SEO";
 
-type LoveAmount = 1 | 2 | 3 | 4 | 5;
-const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange].map((color) => ({
-  color,
-  interpolator: ColorInterpolate([Colors.white, color]),
-}));
-const totalCount = 200;
+const NUM_INTENSITIES = 5;
+
+const updateArrayImmutable = <T extends unknown>(
+  arr: T[],
+  val: T,
+  index: number
+): T[] => arr.map((elm, i) => (i === index ? val : elm));
+
+const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange, Colors.green].map(
+  (color) => ({
+    color,
+    interpolator: ColorInterpolate([Colors.white, color]),
+  })
+);
+
+const totalCount = 20;
 const dates = new Array(totalCount).fill(0).map((_, i) => {
   const date = new Date();
   const newMonth = date.getMonth() - (i % 12);
@@ -19,15 +30,114 @@ const dates = new Array(totalCount).fill(0).map((_, i) => {
   return date;
 });
 
+const LoveCell = (props: {
+  colorInterpolator: (index: number) => string;
+  intensity: number;
+  isSelected?: boolean | null;
+  popOverIsOpen?: boolean | null;
+  onClick?: () => any;
+  onIntensitySelect?: (color: number) => any;
+  onMouseEnter?: () => any;
+  onMouseLeave?: () => any;
+}) => (
+  <>
+    <Popover
+      body={
+        <div
+          style={{
+            padding: 6,
+            width: NUM_INTENSITIES * 30,
+            justifyContent: "space-between",
+            backgroundColor: Colors.white,
+            display: "flex",
+            borderRadius: 2,
+            boxShadow:
+              "0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22)",
+          }}
+        >
+          {new Array(NUM_INTENSITIES).fill(0).map((_, i) => (
+            <div
+              onClick={() =>
+                props.onIntensitySelect && props.onIntensitySelect(i)
+              }
+              key={i}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 3,
+                boxShadow: "3px 3px 6px #cbcaca, -3px -3px 6px #ffffff",
+                backgroundColor: props.colorInterpolator(i / NUM_INTENSITIES),
+              }}
+            ></div>
+          ))}
+        </div>
+      }
+      isOpen={!!props.popOverIsOpen}
+      preferPlace="below"
+    >
+      <td
+        onClick={props.onClick}
+        onMouseEnter={props.onMouseEnter}
+        onMouseLeave={props.onMouseLeave}
+      />
+    </Popover>
+    <style jsx>
+      {`
+        td {
+          border-radius: 10px;
+          box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
+          background-color: ${Colors.white};
+          width: 150px;
+          height: 60px;
+        }
+
+        td:hover {
+          cursor: pointer;
+        }
+      `}
+    </style>
+    <style jsx>
+      {`
+        td {
+          background-color: ${props.colorInterpolator(
+            props.intensity / NUM_INTENSITIES
+          )};
+          ${props.isSelected ? "border: 1px solid black" : ""}
+        }
+      `}
+    </style>
+    <style jsx global>
+      {`
+        .Popover-tipShape {
+          fill: ${Colors.white};
+        }
+      `}
+    </style>
+  </>
+);
+
 const NewStory = () => {
   const [love, setLove] = useState<
-    { love: LoveAmount; heartbreak: LoveAmount }[][]
+    {
+      love: number;
+      heartbreak: number;
+      lovePopoverOpen: boolean;
+      heartbreakPopoverOpen: boolean;
+      loveSelected: boolean;
+      heartbreakSelected: boolean;
+    }[][]
   >([
     Array(totalCount).fill({
       heartbreak: 0,
       love: 0,
+      lovePopoverOpen: false,
+      heartbreakPopoverOpen: false,
+      loveSelected: false,
+      heartbreakSelected: false,
     }),
   ]);
+
+  const [mainSelect, setMainSelect] = useState<[number, number] | null>(null);
 
   return (
     <>
@@ -38,7 +148,12 @@ const NewStory = () => {
             onClick={() =>
               setLove((l) => [
                 ...l,
-                Array(totalCount).fill({ heartbreak: 0, love: 0 }),
+                Array(totalCount).fill({
+                  heartbreak: 0,
+                  love: 0,
+                  lovePopoverOpen: false,
+                  heartbreakPopoverOpen: false,
+                }),
               ])
             }
           >
@@ -89,13 +204,30 @@ const NewStory = () => {
                 </td>
                 {love.map((line, lineI) => (
                   <Fragment key={lineI}>
-                    <td
-                      style={{
-                        backgroundColor: LOVE_COLORS[
-                          lineI % LOVE_COLORS.length
-                        ].interpolator(line[i]?.love / 5 || 0),
-                      }}
+                    <LoveCell
+                      isSelected={line[i].loveSelected}
+                      colorInterpolator={
+                        LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
+                      }
+                      intensity={line[i].love}
+                      popOverIsOpen={line[i].lovePopoverOpen}
                       onClick={() =>
+                        setLove((sl) =>
+                          updateArrayImmutable(
+                            sl,
+                            updateArrayImmutable(
+                              sl[lineI],
+                              {
+                                ...sl[lineI][i],
+                                lovePopoverOpen: !sl[lineI][i].lovePopoverOpen,
+                              },
+                              i
+                            ),
+                            lineI
+                          )
+                        )
+                      }
+                      onIntensitySelect={(intensity) => {
                         setLove((sl) =>
                           sl.map((sline, slineI) => {
                             if (slineI === lineI) {
@@ -103,25 +235,40 @@ const NewStory = () => {
                                 slineLoveI === i
                                   ? {
                                       ...slineLove,
-                                      love: ((slineLove.love + 1) %
-                                        6) as LoveAmount,
+                                      love: intensity,
                                     }
                                   : slineLove
                               );
                             }
                             return sline;
                           })
-                        )
-                      }
+                        );
+                      }}
                     />
-                    <td
-                      key={lineI}
-                      style={{
-                        backgroundColor: LOVE_COLORS[
-                          lineI % LOVE_COLORS.length
-                        ].interpolator(line[i]?.heartbreak / 5 || 0),
-                      }}
+                    <LoveCell
+                      popOverIsOpen={line[i].heartbreakPopoverOpen}
+                      colorInterpolator={
+                        LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
+                      }
+                      intensity={line[i].heartbreak}
                       onClick={() =>
+                        setLove((sl) =>
+                          updateArrayImmutable(
+                            sl,
+                            updateArrayImmutable(
+                              sl[lineI],
+                              {
+                                ...sl[lineI][i],
+                                heartbreakPopoverOpen: !sl[lineI][i]
+                                  .heartbreakPopoverOpen,
+                              },
+                              i
+                            ),
+                            lineI
+                          )
+                        )
+                      }
+                      onIntensitySelect={(intensity) => {
                         setLove((sl) =>
                           sl.map((sline, slineI) => {
                             if (slineI === lineI) {
@@ -129,16 +276,15 @@ const NewStory = () => {
                                 slineLoveI === i
                                   ? {
                                       ...slineLove,
-                                      heartbreak: ((slineLove.heartbreak + 1) %
-                                        6) as LoveAmount,
+                                      heartbreak: intensity,
                                     }
                                   : slineLove
                               );
                             }
                             return sline;
                           })
-                        )
-                      }
+                        );
+                      }}
                     />
                   </Fragment>
                 ))}
@@ -193,40 +339,28 @@ const NewStory = () => {
             padding: 0 30px;
           }
 
+          tr:first-child td:first-child {
+            border-top-left-radius: 8px;
+          }
+          tr:first-child td:last-child {
+            border-top-right-radius: 8px;
+          }
+
+          tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+          }
+          tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+          }
+
           .line th {
             font-weight: lighter;
             padding-bottom: 10px;
           }
 
-          .line tbody tr:first-child td:first-child {
-            border-top-left-radius: 8px;
-          }
-          .line tbody tr:first-child td:last-child {
-            border-top-right-radius: 8px;
-          }
-
-          .line tbody tr:last-child td:first-child {
-            border-bottom-left-radius: 8px;
-          }
-          .line tbody tr:last-child td:last-child {
-            border-bottom-right-radius: 8px;
-          }
-
-          .line-holder .line td {
+          td {
             width: 150px;
-          }
-          .line-holder .line tr td {
             height: 60px;
-          }
-
-          .line-holder .line tbody tr td:not(:nth-child(1)) {
-            border-radius: 10px;
-            box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
-            background-color: ${Colors.white};
-          }
-
-          .line-holder .line tbody tr td:not(:nth-child(1)):hover {
-            cursor: pointer;
           }
         `}
       </style>
