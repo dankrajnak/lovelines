@@ -1,6 +1,13 @@
 import Colors from "../styles/colors";
 import SEO from "../utilities/SEO";
 import Circle from "../UI/Circle";
+import { useAuth0 } from "@auth0/auth0-react";
+
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  return <button onClick={() => loginWithRedirect()}>Log In</button>;
+};
 
 const Home = () => (
   <>
@@ -13,7 +20,10 @@ const Home = () => (
           <Circle color={Colors.blue} style={{ marginLeft: 5 }} />
           <Circle color={Colors.orange} style={{ marginLeft: 5 }} />
         </h1>
-        <div className="description">Under construction</div>
+        <div className="description">
+          Under construction
+          <LoginButton />
+        </div>
       </div>
     </div>
     <style jsx>{`
