@@ -7,12 +7,6 @@ import SEO from "../utilities/SEO";
 
 const NUM_INTENSITIES = 5;
 
-const updateArrayImmutable = <T extends unknown>(
-  arr: T[],
-  val: T,
-  index: number
-): T[] => arr.map((elm, i) => (i === index ? val : elm));
-
 const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange, Colors.green].map(
   (color) => ({
     color,
@@ -121,8 +115,6 @@ const NewStory = () => {
     {
       love: number;
       heartbreak: number;
-      lovePopoverOpen: boolean;
-      heartbreakPopoverOpen: boolean;
       loveSelected: boolean;
       heartbreakSelected: boolean;
     }[][]
@@ -137,7 +129,23 @@ const NewStory = () => {
     }),
   ]);
 
-  const [mainSelect, setMainSelect] = useState<[number, number] | null>(null);
+  const [popOverOpen, setPopOverOpen] = useState<{
+    lineIndex: number;
+    rowIndex: number;
+    isLove: boolean;
+  } | null>(null);
+
+  const [mainSelect, setMainSelect] = useState<{
+    lineIndex: number;
+    rowIndex: number;
+    isLove: boolean;
+  } | null>(null);
+
+  const [hoveredCell, setHoveredCell] = useState<{
+    lineIndex: number;
+    rowIndex: number;
+    isLove: boolean;
+  } | null>(null);
 
   return (
     <>
@@ -205,34 +213,76 @@ const NewStory = () => {
                 {love.map((line, lineI) => (
                   <Fragment key={lineI}>
                     <LoveCell
-                      isSelected={line[i].loveSelected}
+                      isSelected={
+                        mainSelect &&
+                        mainSelect.lineIndex === lineI &&
+                        ((mainSelect.rowIndex === i && mainSelect.isLove) ||
+                          (hoveredCell &&
+                            hoveredCell.isLove &&
+                            hoveredCell.lineIndex === lineI &&
+                            Math.max(
+                              hoveredCell.rowIndex,
+                              mainSelect.rowIndex
+                            ) >= i &&
+                            i >=
+                              Math.min(
+                                hoveredCell.rowIndex,
+                                mainSelect.rowIndex
+                              )))
+                      }
                       colorInterpolator={
                         LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
                       }
                       intensity={line[i].love}
-                      popOverIsOpen={line[i].lovePopoverOpen}
-                      onClick={() =>
-                        setLove((sl) =>
-                          updateArrayImmutable(
-                            sl,
-                            updateArrayImmutable(
-                              sl[lineI],
-                              {
-                                ...sl[lineI][i],
-                                lovePopoverOpen: !sl[lineI][i].lovePopoverOpen,
-                              },
-                              i
-                            ),
-                            lineI
-                          )
-                        )
+                      popOverIsOpen={
+                        mainSelect &&
+                        popOverOpen &&
+                        popOverOpen.rowIndex === i &&
+                        popOverOpen.lineIndex === lineI &&
+                        popOverOpen.isLove
                       }
+                      onMouseEnter={() => {
+                        const address = {
+                          rowIndex: i,
+                          lineIndex: lineI,
+                          isLove: true,
+                        };
+                        setPopOverOpen(address);
+                        setHoveredCell(address);
+                      }}
+                      onClick={() => {
+                        const address = {
+                          rowIndex: i,
+                          lineIndex: lineI,
+                          isLove: true,
+                        };
+                        if (
+                          address.rowIndex === mainSelect?.rowIndex &&
+                          address.lineIndex === mainSelect?.lineIndex &&
+                          address.isLove === mainSelect?.isLove
+                        ) {
+                          console.log("AHHHHHH");
+                          setMainSelect(null);
+                          setPopOverOpen(null);
+                        } else {
+                          setPopOverOpen(address);
+                          setMainSelect(address);
+                        }
+                      }}
                       onIntensitySelect={(intensity) => {
                         setLove((sl) =>
                           sl.map((sline, slineI) => {
                             if (slineI === lineI) {
                               return sline.map((slineLove, slineLoveI) =>
-                                slineLoveI === i
+                                Math.max(
+                                  hoveredCell.rowIndex,
+                                  mainSelect.rowIndex
+                                ) >= slineLoveI &&
+                                slineLoveI >=
+                                  Math.min(
+                                    hoveredCell.rowIndex,
+                                    mainSelect.rowIndex
+                                  )
                                   ? {
                                       ...slineLove,
                                       love: intensity,
@@ -243,31 +293,30 @@ const NewStory = () => {
                             return sline;
                           })
                         );
+                        setMainSelect(null);
+                        setPopOverOpen(null);
                       }}
                     />
                     <LoveCell
-                      popOverIsOpen={line[i].heartbreakPopoverOpen}
+                      popOverIsOpen={
+                        popOverOpen &&
+                        popOverOpen.rowIndex === i &&
+                        popOverOpen.lineIndex === lineI &&
+                        !popOverOpen.isLove
+                      }
                       colorInterpolator={
                         LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
                       }
                       intensity={line[i].heartbreak}
-                      onClick={() =>
-                        setLove((sl) =>
-                          updateArrayImmutable(
-                            sl,
-                            updateArrayImmutable(
-                              sl[lineI],
-                              {
-                                ...sl[lineI][i],
-                                heartbreakPopoverOpen: !sl[lineI][i]
-                                  .heartbreakPopoverOpen,
-                              },
-                              i
-                            ),
-                            lineI
-                          )
-                        )
-                      }
+                      onClick={() => {
+                        const address = {
+                          rowIndex: i,
+                          lineIndex: lineI,
+                          isLove: false,
+                        };
+                        setPopOverOpen(address);
+                        setMainSelect(address);
+                      }}
                       onIntensitySelect={(intensity) => {
                         setLove((sl) =>
                           sl.map((sline, slineI) => {
