@@ -320,13 +320,11 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
             }
           }}
           onIntensitySelect={(intensity) => {
-            console.log(intensity);
             setLove((sl) =>
               sl.update(xPos, (sline) =>
                 sline.withMutations((mutSline) => {
                   mutSline.forEach((val, i) => {
                     if (val.selected) {
-                      console.log("HEY", i);
                       mutSline.update(i, (cell) => ({
                         ...cell,
                         intensity,
