@@ -8,11 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "@types/react-window": "^1.8.2",
     "color-interpolate": "^1.0.5",
+    "immutable": "^4.0.0-rc.12",
     "next": "10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-popover": "^0.5.10"
+    "react-popover": "^0.5.10",
+    "react-window": "^1.8.6",
+    "recoil": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.10",

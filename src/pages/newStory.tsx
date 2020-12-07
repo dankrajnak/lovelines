@@ -1,9 +1,12 @@
 import ColorInterpolate from "color-interpolate";
+import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import { Fragment, useState } from "react";
 import Colors from "../styles/colors";
 import Circle from "../UI/Circle";
 import SEO from "../utilities/SEO";
+import { List } from "immutable";
+import { atom, useRecoilState } from "recoil";
+import { useEffect, useState } from "react";
 
 const NUM_INTENSITIES = 5;
 
@@ -14,7 +17,7 @@ const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange, Colors.green].map(
   })
 );
 
-const totalCount = 20;
+const totalCount = 2000;
 const dates = new Array(totalCount).fill(0).map((_, i) => {
   const date = new Date();
   const newMonth = date.getMonth() - (i % 12);
@@ -22,6 +25,46 @@ const dates = new Array(totalCount).fill(0).map((_, i) => {
   date.setMonth(newMonth);
   date.setFullYear(newYear);
   return date;
+});
+
+type Address = {
+  rowIndex: number;
+  columnIndex: number;
+};
+
+const CELL_STATE = atom<
+  List<
+    List<{
+      intensity: number;
+      selected: boolean;
+    }>
+  >
+>({
+  key: "newStoryCellState",
+  default: List([
+    List(
+      Array(totalCount).fill({
+        intensity: 0,
+        selected: false,
+      })
+    ),
+    List(
+      Array(totalCount).fill({
+        intensity: 0,
+        selected: false,
+      })
+    ),
+  ]),
+});
+
+const POPOVER_STATE = atom<Address | null>({
+  key: "newStoryPopoverState",
+  default: null,
+});
+
+const MAIN_SELECT_STATE = atom<Address | null>({
+  key: "newStoryMainSelectState",
+  default: null,
 });
 
 const LoveCell = (props: {
@@ -69,7 +112,8 @@ const LoveCell = (props: {
       isOpen={!!props.popOverIsOpen}
       preferPlace="below"
     >
-      <td
+      <div
+        className="cell"
         onClick={props.onClick}
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
@@ -77,7 +121,7 @@ const LoveCell = (props: {
     </Popover>
     <style jsx>
       {`
-        td {
+        .cell {
           border-radius: 10px;
           box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
           background-color: ${Colors.white};
@@ -85,14 +129,14 @@ const LoveCell = (props: {
           height: 60px;
         }
 
-        td:hover {
+        .cell:hover {
           cursor: pointer;
         }
       `}
     </style>
     <style jsx>
       {`
-        td {
+        .cell {
           background-color: ${props.colorInterpolator(
             props.intensity / NUM_INTENSITIES
           )};
@@ -110,42 +154,205 @@ const LoveCell = (props: {
   </>
 );
 
+const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
+  const [love, setLove] = useRecoilState(CELL_STATE);
+  const [mainSelect, setMainSelect] = useRecoilState(MAIN_SELECT_STATE);
+  const [popOverOpen, setPopOverOpen] = useRecoilState(POPOVER_STATE);
+
+  if (columnIndex === 0 && rowIndex === 0) {
+    return <div style={style} />;
+  }
+  if (columnIndex === 0) {
+    return (
+      <div style={style}>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {new Intl.DateTimeFormat("default", {
+            month: "short",
+            year: "numeric",
+          }).format(dates[rowIndex])}
+        </div>
+      </div>
+    );
+  }
+  if (rowIndex === 0) {
+    if (columnIndex % 2 !== 0) {
+      return (
+        <div style={style}>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-end",
+            }}
+          >
+            <div>
+              Love{" "}
+              <Circle
+                color={
+                  LOVE_COLORS[((columnIndex - 1) / 2) % LOVE_COLORS.length]
+                    .color
+                }
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div style={style}>
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+          }}
+        >
+          <div>
+            Heartbreak{" "}
+            <Circle
+              color={
+                LOVE_COLORS[((columnIndex - 2) / 2) % LOVE_COLORS.length].color
+              }
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  const xPos = columnIndex - 1;
+  const yPos = rowIndex - 1;
+  const lineIndex = xPos % 2 === 0 ? xPos / 2 : (xPos - 1) / 2;
+
+  return (
+    <div style={style}>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LoveCell
+          isSelected={love.getIn([xPos, yPos]).selected}
+          colorInterpolator={
+            LOVE_COLORS[lineIndex % LOVE_COLORS.length].interpolator
+          }
+          intensity={love.getIn([xPos, yPos]).intensity}
+          popOverIsOpen={
+            popOverOpen &&
+            popOverOpen.rowIndex === yPos &&
+            popOverOpen.columnIndex === xPos
+          }
+          onMouseEnter={() => {
+            // Set all the selected cells
+            const range = (start: number, end: number) =>
+              new Array(end - start + 1).fill(0).map((_, ind) => ind + start);
+            if (mainSelect && mainSelect.columnIndex === xPos) {
+              setPopOverOpen({ rowIndex: yPos, columnIndex: xPos });
+              setLove((luv) =>
+                luv.update(xPos, (line) =>
+                  line.withMutations((mutLine) => {
+                    mutLine.forEach((_, i) => {
+                      if (i !== mainSelect.rowIndex) {
+                        mutLine.update(i, (val) => ({
+                          ...val,
+                          selected: false,
+                        }));
+                      }
+                    });
+
+                    range(
+                      Math.min(mainSelect.rowIndex, yPos),
+                      Math.max(mainSelect.rowIndex, yPos)
+                    ).forEach((i) => {
+                      mutLine.update(i, (l) => ({ ...l, selected: true }));
+                    });
+                  })
+                )
+              );
+            }
+          }}
+          onClick={() => {
+            const address = {
+              rowIndex: yPos,
+              columnIndex: xPos,
+            };
+            if (
+              mainSelect &&
+              address.rowIndex === mainSelect.rowIndex &&
+              address.columnIndex === mainSelect.columnIndex
+            ) {
+              setMainSelect(null);
+              setPopOverOpen(null);
+            } else {
+              setPopOverOpen(address);
+              setMainSelect(address);
+              // Unselect every cell.
+              setLove((love) =>
+                love.map((line) =>
+                  line.withMutations((mutLine) =>
+                    mutLine.forEach((_, cellI) =>
+                      mutLine.update(cellI, (cell) => ({
+                        ...cell,
+                        selected: false,
+                      }))
+                    )
+                  )
+                )
+              );
+              setLove((l) =>
+                l.updateIn([xPos, yPos], (val) => ({ ...val, selected: true }))
+              );
+            }
+          }}
+          onIntensitySelect={(intensity) => {
+            console.log(intensity);
+            setLove((sl) =>
+              sl.update(xPos, (sline) =>
+                sline.withMutations((mutSline) => {
+                  mutSline.forEach((val, i) => {
+                    if (val.selected) {
+                      console.log("HEY", i);
+                      mutSline.update(i, (cell) => ({
+                        ...cell,
+                        intensity,
+                        selected: false,
+                      }));
+                    }
+                  });
+                })
+              )
+            );
+            setMainSelect(null);
+            setPopOverOpen(null);
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
 const NewStory = () => {
-  const [love, setLove] = useState<
-    {
-      love: number;
-      heartbreak: number;
-      loveSelected: boolean;
-      heartbreakSelected: boolean;
-    }[][]
-  >([
-    Array(totalCount).fill({
-      heartbreak: 0,
-      love: 0,
-      lovePopoverOpen: false,
-      heartbreakPopoverOpen: false,
-      loveSelected: false,
-      heartbreakSelected: false,
-    }),
-  ]);
-
-  const [popOverOpen, setPopOverOpen] = useState<{
-    lineIndex: number;
-    rowIndex: number;
-    isLove: boolean;
-  } | null>(null);
-
-  const [mainSelect, setMainSelect] = useState<{
-    lineIndex: number;
-    rowIndex: number;
-    isLove: boolean;
-  } | null>(null);
-
-  const [hoveredCell, setHoveredCell] = useState<{
-    lineIndex: number;
-    rowIndex: number;
-    isLove: boolean;
-  } | null>(null);
+  const [love, setLove] = useRecoilState(CELL_STATE);
+  //TODO make this into a hook
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    setWidth(window.innerWidth);
+  }, []);
 
   return (
     <>
@@ -154,193 +361,47 @@ const NewStory = () => {
         <div className="buttons">
           <button
             onClick={() =>
-              setLove((l) => [
-                ...l,
-                Array(totalCount).fill({
-                  heartbreak: 0,
-                  love: 0,
-                  lovePopoverOpen: false,
-                  heartbreakPopoverOpen: false,
-                }),
-              ])
+              setLove((l) =>
+                l
+                  .push(
+                    List(
+                      Array(totalCount).fill({
+                        intensity: 0,
+                        selected: false,
+                      })
+                    )
+                  )
+                  .push(
+                    List(
+                      Array(totalCount).fill({
+                        intensity: 0,
+                        selected: false,
+                      })
+                    )
+                  )
+              )
             }
           >
             +
           </button>
           <button
-            onClick={() =>
-              setLove((l) => l.slice(0, Math.max(1, l.length - 1)))
-            }
+            onClick={() => setLove((l) => (l.size > 2 ? l.pop().pop() : l))}
           >
             -
           </button>
         </div>
       </div>
       <div className="line-holder">
-        <table className="line">
-          <thead>
-            <tr>
-              <th />
-              {love.map((_, i) => (
-                <Fragment key={i}>
-                  <th>
-                    Love{" "}
-                    <Circle color={LOVE_COLORS[i % LOVE_COLORS.length].color} />
-                  </th>
-                  <th>
-                    Heartbreak{" "}
-                    <Circle color={LOVE_COLORS[i % LOVE_COLORS.length].color} />
-                  </th>
-                </Fragment>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {new Array(totalCount).fill(0).map((_, i) => (
-              <tr key={i}>
-                <td
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  {new Intl.DateTimeFormat("default", {
-                    month: "short",
-                    year: "numeric",
-                  }).format(dates[i])}
-                </td>
-                {love.map((line, lineI) => (
-                  <Fragment key={lineI}>
-                    <LoveCell
-                      isSelected={
-                        mainSelect &&
-                        mainSelect.lineIndex === lineI &&
-                        ((mainSelect.rowIndex === i && mainSelect.isLove) ||
-                          (hoveredCell &&
-                            hoveredCell.isLove &&
-                            hoveredCell.lineIndex === lineI &&
-                            Math.max(
-                              hoveredCell.rowIndex,
-                              mainSelect.rowIndex
-                            ) >= i &&
-                            i >=
-                              Math.min(
-                                hoveredCell.rowIndex,
-                                mainSelect.rowIndex
-                              )))
-                      }
-                      colorInterpolator={
-                        LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
-                      }
-                      intensity={line[i].love}
-                      popOverIsOpen={
-                        mainSelect &&
-                        popOverOpen &&
-                        popOverOpen.rowIndex === i &&
-                        popOverOpen.lineIndex === lineI &&
-                        popOverOpen.isLove
-                      }
-                      onMouseEnter={() => {
-                        const address = {
-                          rowIndex: i,
-                          lineIndex: lineI,
-                          isLove: true,
-                        };
-                        setPopOverOpen(address);
-                        setHoveredCell(address);
-                      }}
-                      onClick={() => {
-                        const address = {
-                          rowIndex: i,
-                          lineIndex: lineI,
-                          isLove: true,
-                        };
-                        if (
-                          address.rowIndex === mainSelect?.rowIndex &&
-                          address.lineIndex === mainSelect?.lineIndex &&
-                          address.isLove === mainSelect?.isLove
-                        ) {
-                          console.log("AHHHHHH");
-                          setMainSelect(null);
-                          setPopOverOpen(null);
-                        } else {
-                          setPopOverOpen(address);
-                          setMainSelect(address);
-                        }
-                      }}
-                      onIntensitySelect={(intensity) => {
-                        setLove((sl) =>
-                          sl.map((sline, slineI) => {
-                            if (slineI === lineI) {
-                              return sline.map((slineLove, slineLoveI) =>
-                                Math.max(
-                                  hoveredCell.rowIndex,
-                                  mainSelect.rowIndex
-                                ) >= slineLoveI &&
-                                slineLoveI >=
-                                  Math.min(
-                                    hoveredCell.rowIndex,
-                                    mainSelect.rowIndex
-                                  )
-                                  ? {
-                                      ...slineLove,
-                                      love: intensity,
-                                    }
-                                  : slineLove
-                              );
-                            }
-                            return sline;
-                          })
-                        );
-                        setMainSelect(null);
-                        setPopOverOpen(null);
-                      }}
-                    />
-                    <LoveCell
-                      popOverIsOpen={
-                        popOverOpen &&
-                        popOverOpen.rowIndex === i &&
-                        popOverOpen.lineIndex === lineI &&
-                        !popOverOpen.isLove
-                      }
-                      colorInterpolator={
-                        LOVE_COLORS[lineI % LOVE_COLORS.length].interpolator
-                      }
-                      intensity={line[i].heartbreak}
-                      onClick={() => {
-                        const address = {
-                          rowIndex: i,
-                          lineIndex: lineI,
-                          isLove: false,
-                        };
-                        setPopOverOpen(address);
-                        setMainSelect(address);
-                      }}
-                      onIntensitySelect={(intensity) => {
-                        setLove((sl) =>
-                          sl.map((sline, slineI) => {
-                            if (slineI === lineI) {
-                              return sline.map((slineLove, slineLoveI) =>
-                                slineLoveI === i
-                                  ? {
-                                      ...slineLove,
-                                      heartbreak: intensity,
-                                    }
-                                  : slineLove
-                              );
-                            }
-                            return sline;
-                          })
-                        );
-                      }}
-                    />
-                  </Fragment>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <FixedSizeGrid
+          columnCount={1 + love.size}
+          columnWidth={170}
+          height={700}
+          rowCount={totalCount}
+          rowHeight={80}
+          width={width}
+        >
+          {Cell}
+        </FixedSizeGrid>
       </div>
       <style jsx>
         {`
@@ -386,30 +447,6 @@ const NewStory = () => {
 
             border-radius: 15px;
             padding: 0 30px;
-          }
-
-          tr:first-child td:first-child {
-            border-top-left-radius: 8px;
-          }
-          tr:first-child td:last-child {
-            border-top-right-radius: 8px;
-          }
-
-          tr:last-child td:first-child {
-            border-bottom-left-radius: 8px;
-          }
-          tr:last-child td:last-child {
-            border-bottom-right-radius: 8px;
-          }
-
-          .line th {
-            font-weight: lighter;
-            padding-bottom: 10px;
-          }
-
-          td {
-            width: 150px;
-            height: 60px;
           }
         `}
       </style>
