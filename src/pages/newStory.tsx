@@ -27,6 +27,9 @@ const dates = new Array(totalCount).fill(0).map((_, i) => {
   return date;
 });
 
+const range = (start: number, end: number) =>
+  new Array(end - start + 1).fill(0).map((_, ind) => ind + start);
+
 type Address = {
   rowIndex: number;
   columnIndex: number;
@@ -64,6 +67,11 @@ const POPOVER_STATE = atom<Address | null>({
 
 const MAIN_SELECT_STATE = atom<Address | null>({
   key: "newStoryMainSelectState",
+  default: null,
+});
+
+const SECOND_SELECT_STATE = atom<Address | null>({
+  key: "newStorySecondSelectState",
   default: null,
 });
 
@@ -157,6 +165,7 @@ const LoveCell = (props: {
 const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
   const [love, setLove] = useRecoilState(CELL_STATE);
   const [mainSelect, setMainSelect] = useRecoilState(MAIN_SELECT_STATE);
+  const [secondSelect, setSecondSelct] = useRecoilState(SECOND_SELECT_STATE);
   const [popOverOpen, setPopOverOpen] = useRecoilState(POPOVER_STATE);
 
   if (columnIndex === 0 && rowIndex === 0) {
@@ -259,9 +268,12 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
           }
           onMouseEnter={() => {
             // Set all the selected cells
-            const range = (start: number, end: number) =>
-              new Array(end - start + 1).fill(0).map((_, ind) => ind + start);
-            if (mainSelect && mainSelect.columnIndex === xPos) {
+
+            if (
+              mainSelect &&
+              !secondSelect &&
+              mainSelect.columnIndex === xPos
+            ) {
               setPopOverOpen({ rowIndex: yPos, columnIndex: xPos });
               setLove((luv) =>
                 luv.update(xPos, (line) =>
@@ -298,9 +310,33 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
             ) {
               setMainSelect(null);
               setPopOverOpen(null);
+            } else if (mainSelect && !secondSelect) {
+              setSecondSelct(address);
+              setLove((luv) =>
+                luv.update(xPos, (line) =>
+                  line.withMutations((mutLine) => {
+                    mutLine.forEach((_, i) => {
+                      if (i !== mainSelect.rowIndex) {
+                        mutLine.update(i, (val) => ({
+                          ...val,
+                          selected: false,
+                        }));
+                      }
+                    });
+
+                    range(
+                      Math.min(mainSelect.rowIndex, yPos),
+                      Math.max(mainSelect.rowIndex, yPos)
+                    ).forEach((i) => {
+                      mutLine.update(i, (l) => ({ ...l, selected: true }));
+                    });
+                  })
+                )
+              );
             } else {
               setPopOverOpen(address);
               setMainSelect(address);
+              setSecondSelct(null);
               // Unselect every cell.
               setLove((love) =>
                 love.map((line) =>
