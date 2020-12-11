@@ -170,7 +170,7 @@ const LoveCell = (props: {
 const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
   const [love, setLove] = useRecoilState(CELL_STATE);
   const [mainSelect, setMainSelect] = useRecoilState(MAIN_SELECT_STATE);
-  const [secondSelect, setSecondSelct] = useRecoilState(SECOND_SELECT_STATE);
+  const [secondSelect, setSecondSelect] = useRecoilState(SECOND_SELECT_STATE);
   const [popOverOpen, setPopOverOpen] = useRecoilState(POPOVER_STATE);
 
   if (columnIndex === 0 && rowIndex === 0) {
@@ -320,7 +320,7 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
               !secondSelect &&
               address.columnIndex === mainSelect.columnIndex
             ) {
-              setSecondSelct(address);
+              setSecondSelect(address);
               setPopOverOpen(address);
               setLove((luv) =>
                 luv.update(xPos, (line) =>
@@ -346,7 +346,7 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
             } else {
               setPopOverOpen(address);
               setMainSelect(address);
-              setSecondSelct(null);
+              setSecondSelect(null);
               // Unselect every cell.
               setLove((love) =>
                 love.map((line) =>
