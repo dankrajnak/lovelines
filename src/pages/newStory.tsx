@@ -6,7 +6,7 @@ import Circle from "../UI/Circle";
 import SEO from "../utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
-import { useEffect, useState } from "react";
+import useDimensions from "../hooks/useDimensions";
 
 const NUM_INTENSITIES = 5;
 
@@ -346,12 +346,7 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
 
 const NewStory = () => {
   const [love, setLove] = useRecoilState(CELL_STATE);
-  //TODO make this into a hook
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    setWidth(window.innerWidth);
-  }, []);
-
+  const [ref, dimensions] = useDimensions();
   return (
     <>
       <SEO title="New Story" />
@@ -389,22 +384,26 @@ const NewStory = () => {
           </button>
         </div>
       </div>
-      <div className="line-holder">
-        <FixedSizeGrid
-          columnCount={1 + love.size}
-          columnWidth={170}
-          height={700}
-          rowCount={totalCount}
-          rowHeight={80}
-          width={width}
-        >
-          {Cell}
-        </FixedSizeGrid>
+      <div ref={ref} className="line-holder">
+        {dimensions && (
+          <FixedSizeGrid
+            columnCount={1 + love.size}
+            columnWidth={170}
+            height={dimensions?.height}
+            rowCount={totalCount}
+            rowHeight={80}
+            width={dimensions?.width}
+          >
+            {Cell}
+          </FixedSizeGrid>
+        )}
       </div>
       <style jsx>
         {`
           .top-menu-holder {
-            margin-top: 30px;
+            position: fixed;
+            top: 30px;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -432,19 +431,13 @@ const NewStory = () => {
           }
 
           .line-holder {
+            position: fixed;
+            top: 100px;
+            bottom: 0;
+            left: 0;
+            right: 0;
             display: flex;
             min-width: 800px;
-            margin: 40px auto;
-          }
-
-          .line-holder .line {
-            table-layout: fixed;
-
-            border-spacing: 20px;
-            background-color: ${Colors.white};
-
-            border-radius: 15px;
-            padding: 0 30px;
           }
         `}
       </style>
