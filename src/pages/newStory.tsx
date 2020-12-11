@@ -316,6 +316,7 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
               address.columnIndex === mainSelect.columnIndex
             ) {
               setSecondSelct(address);
+              setPopOverOpen(address);
               setLove((luv) =>
                 luv.update(xPos, (line) =>
                   line.withMutations((mutLine) => {
