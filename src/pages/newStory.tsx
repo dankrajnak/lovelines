@@ -17,6 +17,11 @@ const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange, Colors.green].map(
   })
 );
 
+const CELL_HEIGHT = 40;
+const CELL_MARGIN = 10;
+
+const CELL_WIDTH = 100;
+
 const totalCount = 2000;
 const dates = new Array(totalCount).fill(0).map((_, i) => {
   const date = new Date();
@@ -133,8 +138,8 @@ const LoveCell = (props: {
           border-radius: 10px;
           box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
           background-color: ${Colors.white};
-          width: 150px;
-          height: 60px;
+          width: ${CELL_WIDTH}px;
+          height: ${CELL_HEIGHT}px;
         }
 
         .cell:hover {
@@ -429,10 +434,10 @@ const NewStory = () => {
         {dimensions && (
           <FixedSizeGrid
             columnCount={1 + love.size}
-            columnWidth={170}
+            columnWidth={CELL_WIDTH + CELL_MARGIN * 2}
             height={dimensions?.height}
             rowCount={totalCount}
-            rowHeight={80}
+            rowHeight={CELL_HEIGHT + CELL_MARGIN * 2}
             width={dimensions?.width}
           >
             {Cell}
