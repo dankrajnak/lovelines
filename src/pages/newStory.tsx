@@ -437,7 +437,6 @@ const NewStory = () => {
             left: 0;
             right: 0;
             display: flex;
-            min-width: 800px;
           }
         `}
       </style>
