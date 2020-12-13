@@ -1,5 +1,5 @@
-import Colors from "../styles/colors";
-import SEO from "../utilities/SEO";
+import Colors from "../Styles/colors";
+import SEO from "../Utilities/SEO";
 import Circle from "../UI/Circle";
 
 const Home = () => (

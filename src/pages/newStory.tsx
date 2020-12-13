@@ -1,12 +1,12 @@
 import ColorInterpolate from "color-interpolate";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import Colors from "../styles/colors";
+import Colors from "../Styles/colors";
 import Circle from "../UI/Circle";
-import SEO from "../utilities/SEO";
+import SEO from "../Utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
-import useDimensions from "../hooks/useDimensions";
+import useDimensions from "../Hooks/useDimensions";
 
 const NUM_INTENSITIES = 5;
 
