@@ -24,7 +24,7 @@ const SignIn = ({
 }) => {
   const { error } = query;
 
-  let errorMessage;
+  let errorMessage: string = null;
   if (error) {
     switch (error) {
       case "Signin":
@@ -33,26 +33,21 @@ const SignIn = ({
       case "OAuthCreateAccount":
       case "EmailCreateAccount":
       case "Callback":
-        errorMessage = <p>Try signing with a different account.</p>;
+        errorMessage = "Try signing with a different account";
         break;
       case "OAuthAccountNotLinked":
-        errorMessage = (
-          <p>
-            We already have that email, did you sign in a different way
-            previously?
-          </p>
-        );
+        errorMessage =
+          "We already have that email, did you sign in a different way previously?";
         break;
       case "EmailSignin":
-        errorMessage = <p>Check your email address.</p>;
+        errorMessage = "Check your email address";
         break;
       case "CredentialsSignin":
-        errorMessage = (
-          <p>Sign in failed. Check the details you provided are correct.</p>
-        );
+        errorMessage =
+          "Sign in failed. Check the details you provided are correct";
         break;
       default:
-        errorMessage = <p>Unable to sign in.</p>;
+        errorMessage = "Unable to sign in";
         break;
     }
   }
@@ -61,11 +56,14 @@ const SignIn = ({
       <CenterLayout height="100vh">
         <div className="card">
           <Logo />
-          {errorMessage && <div className="error">{errorMessage}</div>}
-          <div style={{ textAlign: "center", marginBottom: 8 }}>
-            No information is shared with these apps. They are only used to
-            securely log you in without a password.
-          </div>
+          {errorMessage ? (
+            <div className="error">{errorMessage}</div>
+          ) : (
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              No information is shared with these apps. They are only used to
+              securely log you in without a password.
+            </div>
+          )}
           <div className="providers-holder">
             {Object.values(providers).map((provider) => (
               <button
@@ -108,6 +106,7 @@ const SignIn = ({
 
           .error {
             color: ${Colors.red};
+            margin: 8px 0px;
             text-align: center;
           }
 
