@@ -1,40 +1,22 @@
-import Colors from "../Styles/colors";
 import SEO from "../Utilities/SEO";
-import Circle from "../UI/Circle";
+import Logo from "../UI/Logo";
+import { signIn, signOut, useSession } from "next-auth/client";
+import NavbarLayout from "../Layout/NavbarLayout";
+import CenterLayout from "../Layout/CenterLayout";
 
 const Home = () => (
-  <>
+  <NavbarLayout>
     <SEO />
-    <div className="holder">
-      <div>
-        <h1>
-          LoveLines
-          <Circle color={Colors.red} style={{ marginLeft: 5 }} />
-          <Circle color={Colors.blue} style={{ marginLeft: 5 }} />
-          <Circle color={Colors.orange} style={{ marginLeft: 5 }} />
-        </h1>
-        <div className="description">Under construction</div>
-      </div>
-    </div>
+    <CenterLayout height="100vh">
+      <Logo />
+      <div className="description">Under construction</div>
+    </CenterLayout>
     <style jsx>{`
-      .holder,
-      .holder > div {
-        display: flex;
-        width: 100%;
-        height: 100vh;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-      }
-      h1 {
-        margin-bottom: 3px;
-        font-weight: 500;
-      }
       .description {
         font-weight: lighter;
       }
     `}</style>
-  </>
+  </NavbarLayout>
 );
 
 export default Home;
