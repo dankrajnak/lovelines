@@ -1,6 +1,5 @@
 import SEO from "../Utilities/SEO";
 import Logo from "../UI/Logo";
-import { signIn, signOut, useSession } from "next-auth/client";
 import NavbarLayout from "../Layout/NavbarLayout";
 import CenterLayout from "../Layout/CenterLayout";
 

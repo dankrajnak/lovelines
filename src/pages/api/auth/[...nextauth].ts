@@ -1,6 +1,8 @@
 import NextAuth, { InitOptions } from "next-auth";
 import Providers from "next-auth/providers";
 import { NextApiRequest, NextApiResponse } from "next-auth/_utils";
+import Adapters from "next-auth/adapters";
+import prisma from "../../../Lib/prisma";
 
 const options: InitOptions = {
   providers: [
@@ -22,6 +24,15 @@ const options: InitOptions = {
     signIn: "/auth/signin",
   },
   secret: process.env.SECRET,
+  adapter: Adapters.Prisma.Adapter({
+    prisma,
+    modelMapping: {
+      User: "person",
+      Account: "account",
+      Session: "session",
+      VerificationRequest: "verificationRequest",
+    },
+  }),
   callbacks: {
     redirect: async (url: string, baseUrl: any) => Promise.resolve(baseUrl),
   },
