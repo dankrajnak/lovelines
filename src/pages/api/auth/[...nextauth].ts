@@ -2,7 +2,7 @@ import NextAuth, { InitOptions } from "next-auth";
 import Providers from "next-auth/providers";
 import { NextApiRequest, NextApiResponse } from "next-auth/_utils";
 import Adapters from "next-auth/adapters";
-import prisma from "../../../Lib/prisma";
+import prisma from "../../../Server/prisma";
 
 const options: InitOptions = {
   providers: [
