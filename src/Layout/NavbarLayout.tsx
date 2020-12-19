@@ -1,4 +1,5 @@
 import { useSession, signIn, signOut } from "next-auth/client";
+import Link from "next/link";
 import Colors from "../Styles/colors";
 
 const NavbarLayout: React.FunctionComponent = ({ children }) => {
@@ -7,7 +8,14 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
     <>
       <div className="menu">
         <div className="menu-container">
-          <div></div>
+          <div className="menu-left">
+            <Link href="/">
+              <a>Home</a>
+            </Link>
+            <Link href="/profile">
+              <a>Profile</a>
+            </Link>
+          </div>
           {!!session ? (
             <button className="sign-button" onClick={() => signOut()}>
               Sign Out
@@ -31,6 +39,16 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
           top: 0;
           width: 100%;
           z-index: 1000;
+        }
+
+        .menu-left: {
+          display: flex;
+          flex-grow: 1;
+          align-items: center;
+        }
+
+        .menu-left a {
+          margin-right: 10px;
         }
 
         .menu-container {
