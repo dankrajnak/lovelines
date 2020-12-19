@@ -33,9 +33,6 @@ const options: InitOptions = {
       VerificationRequest: "verificationRequest",
     },
   }),
-  callbacks: {
-    redirect: async (url: string, baseUrl: any) => Promise.resolve(baseUrl),
-  },
 };
 
 const resolver = (

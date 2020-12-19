@@ -5,11 +5,11 @@ import { RecoilRoot } from "recoil";
 import { Provider } from "next-auth/client";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
-  <Provider session={pageProps.session}>
-    <RecoilRoot>
+  <RecoilRoot>
+    <Provider session={pageProps.session}>
       <Component {...pageProps} />
-    </RecoilRoot>
-  </Provider>
+    </Provider>
+  </RecoilRoot>
 );
 
 export default MyApp;

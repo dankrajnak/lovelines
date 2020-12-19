@@ -8,6 +8,7 @@ import {
   faGoogle,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter } from "next/router";
 
 const nameToIcon = {
   Google: faGoogle,
@@ -23,6 +24,7 @@ const SignIn = ({
   query: any;
 }) => {
   const { error } = query;
+  const router = useRouter();
 
   let errorMessage: string = null;
   if (error) {
@@ -69,7 +71,11 @@ const SignIn = ({
               <button
                 key={provider.id}
                 className="provider-button"
-                onClick={() => signIn(provider.id)}
+                onClick={() =>
+                  signIn(provider.id, {
+                    callbackUrl: router.query.callbackUrl as string,
+                  })
+                }
               >
                 <FontAwesomeIcon
                   fixedWidth
