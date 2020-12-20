@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "studio": "prisma studio"
+    "studio": "prisma studio",
+    "type-check": "tsc --noEmit --skipLibCheck",
+    "schemas": "node ./generateApiSchemas.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
@@ -17,6 +19,7 @@
     "@types/next-auth": "^3.1.18",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
+    "ajv": "^7.0.2",
     "color-interpolate": "^1.0.5",
     "immutable": "^4.0.0-rc.12",
     "next": "10.0.3",
@@ -45,10 +48,13 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "glob": "^7.1.6",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "typescript-json-schema": "^0.45.1",
+    "typescript-json-validator": "^2.4.2"
   },
   "husky": {
     "hooks": {
