@@ -63,15 +63,17 @@ model VerificationRequest {
 }
 
 model Period {
-  id           Int      @id @default(autoincrement())
-  date         DateTime
-  lineId       Int      @map(name: "line_id")
-  isHeartBreak Boolean  @map(name: "is_heart_break")
+  id           Int     @id @default(autoincrement())
+  yearMonth    Int     @map(name: "year_month")
+  year         Int
+  month        Int
+  lineId       Int     @map(name: "line_id")
+  isHeartBreak Boolean @map(name: "is_heart_break")
   intensity    Int
-  line         Line     @relation(fields: [lineId], references: [id])
+  line         Line    @relation(fields: [lineId], references: [id])
 
   @@index([isHeartBreak], name: "idx_period_is_heart_break")
-  @@index([date], name: "idx_period_date_desc")
+  @@index([yearMonth], name: "idx_period_year_month")
   @@index([lineId], name: "idx_period_line")
   @@map("period")
 }
