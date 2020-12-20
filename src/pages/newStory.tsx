@@ -7,6 +7,7 @@ import SEO from "../Utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
 import useDimensions from "../Hooks/useDimensions";
+import { APINewStoryRequest, NewStoryAPILine } from "./api/story/newStory";
 
 const NUM_INTENSITIES = 5;
 
@@ -40,14 +41,12 @@ type Address = {
   columnIndex: number;
 };
 
-const CELL_STATE = atom<
-  List<
-    List<{
-      intensity: number;
-      selected: boolean;
-    }>
-  >
->({
+type Cell = {
+  intensity: number;
+  selected: boolean;
+};
+
+const CELL_STATE = atom<List<List<Cell>>>({
   key: "newStoryCellState",
   default: List([
     List(
@@ -427,6 +426,44 @@ const NewStory = () => {
             onClick={() => setLove((l) => (l.size > 2 ? l.pop().pop() : l))}
           >
             -
+          </button>
+          <button
+            onClick={() => {
+              const currentYear = new Date().getFullYear();
+              const currentMonth = new Date().getMonth();
+              console.log(love.toJS());
+              const woohoo: APINewStoryRequest = {
+                story: love.toJS().map((line, lineIndex) =>
+                  line.reduce(
+                    (sum: NewStoryAPILine[], cell: Cell, index: number) => {
+                      const year = currentYear - Math.floor(index / 12);
+                      const month =
+                        ((currentMonth - 1 - (index % 12) + 12) % 12) + 1;
+                      if (cell.intensity) {
+                        sum = [
+                          ...sum,
+                          {
+                            year,
+                            month,
+                            isHeartBreak: lineIndex % 2 !== 0,
+                            intensity: cell.intensity,
+                          },
+                        ];
+                      }
+                      return sum;
+                    },
+                    []
+                  )
+                ),
+              };
+
+              fetch("/api/story/newStory", {
+                method: "POST",
+                body: JSON.stringify(woohoo),
+              }).then((resp) => resp.json().then(console.log));
+            }}
+          >
+            Save
           </button>
         </div>
       </div>
