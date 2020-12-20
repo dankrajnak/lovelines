@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import prisma from "../../Server/prisma";
+import prisma from "../../../Server/prisma";
 
 const newStory = async (
   req: NextApiRequest,
@@ -9,7 +9,7 @@ const newStory = async (
   const session = await getSession({ req });
 
   const person = await prisma.person.findUnique({
-    where: { email: session.user.email },
+    where: { email: session?.user?.email || undefined },
   });
 
   res.json(person);

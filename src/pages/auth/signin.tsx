@@ -26,7 +26,7 @@ const SignIn = ({
   const { error } = query;
   const router = useRouter();
 
-  let errorMessage: string = null;
+  let errorMessage: string | null = null;
   if (error) {
     switch (error) {
       case "Signin":

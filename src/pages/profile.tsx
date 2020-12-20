@@ -11,7 +11,11 @@ const Profile: React.FunctionComponent = () => {
   const router = useRouter();
   const { data } = useSwr(
     "/api/test",
-    (url): Promise<Person> => fetch(url).then((res) => res.json())
+    (url): Promise<Person> =>
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ foo: 6 }),
+      }).then((res) => res.json())
   );
   useEffect(() => {
     if (!session && !loading) {
