@@ -12,7 +12,7 @@ module.exports = {
     "arrow-body-style": ["error", "as-needed"],
     "@typescript-eslint/explicit-function-return-type": 0,
     "typescript/no-unused-expression": 0,
-    "@typescript-eslint/ban-ts-ignore": 0,
+    "@typescript-eslint/ban-ts-comment": 0,
     "@typescript-eslint/no-empty-function": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/no-non-null-assertion": 0,

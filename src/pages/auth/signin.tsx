@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
+import NavbarLayout from "../../Layout/NavbarLayout";
 
 const nameToIcon = {
   Google: faGoogle,
@@ -55,39 +56,41 @@ const SignIn = ({
   }
   return (
     <>
-      <CenterLayout height="100vh">
-        <div className="card">
-          <Logo />
-          {errorMessage ? (
-            <div className="error">{errorMessage}</div>
-          ) : (
-            <div style={{ textAlign: "center", marginBottom: 8 }}>
-              No information is shared with these apps. They are only used to
-              securely log you in without a password.
+      <NavbarLayout>
+        <CenterLayout height="100vh">
+          <div className="card">
+            <Logo />
+            {errorMessage ? (
+              <div className="error">{errorMessage}</div>
+            ) : (
+              <div style={{ textAlign: "center", marginBottom: 8 }}>
+                No information is shared with these apps. They are only used to
+                securely log you in without a password.
+              </div>
+            )}
+            <div className="providers-holder">
+              {Object.values(providers).map((provider) => (
+                <button
+                  key={provider.id}
+                  className="provider-button"
+                  onClick={() =>
+                    signIn(provider.id, {
+                      callbackUrl: router.query.callbackUrl as string,
+                    })
+                  }
+                >
+                  <FontAwesomeIcon
+                    fixedWidth
+                    icon={nameToIcon[provider.name]}
+                    style={{ marginRight: 5 }}
+                  />
+                  {provider.name}
+                </button>
+              ))}
             </div>
-          )}
-          <div className="providers-holder">
-            {Object.values(providers).map((provider) => (
-              <button
-                key={provider.id}
-                className="provider-button"
-                onClick={() =>
-                  signIn(provider.id, {
-                    callbackUrl: router.query.callbackUrl as string,
-                  })
-                }
-              >
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={nameToIcon[provider.name]}
-                  style={{ marginRight: 5 }}
-                />
-                {provider.name}
-              </button>
-            ))}
           </div>
-        </div>
-      </CenterLayout>
+        </CenterLayout>
+      </NavbarLayout>
       <style jsx>
         {`
           .card {

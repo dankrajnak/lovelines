@@ -1,30 +1,51 @@
 import { useSession, signIn, signOut } from "next-auth/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Colors from "../Styles/colors";
+
+export const NAVBAR_HEIGHT = 50 as const;
 
 const NavbarLayout: React.FunctionComponent = ({ children }) => {
   const [session] = useSession();
+  const router = useRouter();
   return (
     <>
       <div className="menu">
         <div className="menu-container">
-          <div className="menu-left">
-            <Link href="/">
-              <a>Home</a>
-            </Link>
-            <Link href="/profile">
-              <a>Profile</a>
-            </Link>
-          </div>
-          {!!session ? (
-            <button className="sign-button" onClick={() => signOut()}>
-              Sign Out
-            </button>
-          ) : (
-            <button className="sign-button" onClick={() => signIn()}>
-              Sign In
-            </button>
+          <div className="box" />
+          {session && (
+            <div className="box box-center">
+              <div>
+                <Link href="/">
+                  <a className={router.pathname === "/" ? "current" : ""}>
+                    Home
+                  </a>
+                </Link>
+                <Link href="/profile">
+                  <a
+                    className={
+                      router.pathname.startsWith("/profile") ? "current" : ""
+                    }
+                  >
+                    Profile
+                  </a>
+                </Link>
+              </div>
+            </div>
           )}
+          <div className="box">
+            <div>
+              {!!session ? (
+                <button className="sign-button" onClick={() => signOut()}>
+                  Sign Out
+                </button>
+              ) : (
+                <button className="sign-button" onClick={() => signIn()}>
+                  Sign In
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       {children}
@@ -32,23 +53,38 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
         .menu {
           position: fixed;
           background: ${Colors.black};
+
           box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16),
             0 3px 6px rgba(0, 0, 0, 0.23);
+
           color: white;
-          height: 50px;
+          height: ${NAVBAR_HEIGHT}px;
           top: 0;
           width: 100%;
           z-index: 1000;
         }
 
-        .menu-left: {
-          display: flex;
-          flex-grow: 1;
-          align-items: center;
+        a.current {
+          font-weight: 700;
         }
 
-        .menu-left a {
+        .box {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+        }
+
+        .box.box-center a {
+          margin-left: 10px;
           margin-right: 10px;
+        }
+
+        .box:first-child > div {
+          margin-right: auto;
+        }
+
+        .box:last-child > div {
+          margin-left: auto;
         }
 
         .menu-container {

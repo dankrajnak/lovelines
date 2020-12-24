@@ -1,4 +1,4 @@
-import { MutableRefObject, useLayoutEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 const useDimensions = (): [
   MutableRefObject<any>,
@@ -6,7 +6,7 @@ const useDimensions = (): [
 ] => {
   const ref = useRef<any>();
   const [dimensions, setDimensions] = useState();
-  useLayoutEffect(() => {
+  useEffect(() => {
     setDimensions(ref.current?.getBoundingClientRect().toJSON());
   }, []);
   return [ref, dimensions];
