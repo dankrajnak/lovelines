@@ -34,8 +34,10 @@ model Person {
   image         String?
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @default(now()) @map("updated_at")
-  stories       Story[]
+  storyId       Int?      @map("story_id")
+  story         Story?    @relation(fields: [storyId], references: [id])
 
+  @@index([storyId], name: "idx_person_story_id")
   @@map("person")
 }
 
@@ -64,45 +66,41 @@ model VerificationRequest {
 
 model Period {
   id           Int     @id @default(autoincrement())
-  yearMonth    Int     @map(name: "year_month")
+  intensity    Int
+  lineId       Int     @map("line_id")
+  isHeartBreak Boolean @map("is_heart_break")
+  yearMonth    Int     @map("year_month")
   year         Int
   month        Int
-  lineId       Int     @map(name: "line_id")
-  isHeartBreak Boolean @map(name: "is_heart_break")
-  intensity    Int
   line         Line    @relation(fields: [lineId], references: [id])
 
   @@index([isHeartBreak], name: "idx_period_is_heart_break")
-  @@index([yearMonth], name: "idx_period_year_month")
   @@index([lineId], name: "idx_period_line")
+  @@index([yearMonth], name: "idx_period_year_month")
   @@map("period")
 }
 
 model Line {
   id          Int       @id @default(autoincrement())
-  storyId     Int       @map(name: "story_id")
-  story       Story     @relation(fields: [storyId], references: [id])
-  periods     Period[]
+  storyId     Int       @map("story_id")
   createdDate DateTime  @default(now()) @map("created_date")
   deletedDate DateTime? @map("deleted_date")
+  story       Story     @relation(fields: [storyId], references: [id])
+  periods     Period[]
 
-
-  @@index([storyId], name: "idx_line_story_id")
   @@index([deletedDate], name: "idx_line_deleted_date")
+  @@index([storyId], name: "idx_line_story_id")
   @@map("line")
 }
 
 model Story {
   id           Int       @id @default(autoincrement())
-  personId     Int       @map("pesron_id")
   createdDate  DateTime  @default(now()) @map("created_date")
   modifiedDate DateTime  @default(now()) @map("modified_date")
   deletedDate  DateTime? @map("deleted_date")
-  person       Person    @relation(fields: [personId], references: [id])
   line         Line[]
 
-
-  @@index([personId], name: "idx_story_person_id")
+  Person Person[]
   @@index([deletedDate], name: "idx_story_deleted_date")
   @@map("story")
 }

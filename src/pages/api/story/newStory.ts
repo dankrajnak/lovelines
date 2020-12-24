@@ -40,7 +40,7 @@ const newStory = async (
         data: {
           createdDate: now,
           modifiedDate: now,
-          person: {
+          Person: {
             connect: { email: session.user.email },
           },
           line: {
