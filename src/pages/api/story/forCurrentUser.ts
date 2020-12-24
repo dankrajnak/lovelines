@@ -4,11 +4,13 @@ import { getSession } from "next-auth/client";
 import prisma from "../../../Server/prisma";
 
 export type GetStoryForCurrentUserReturnType = {
-  data: (Story & {
-    line: (Line & {
-      periods: Period[];
-    })[];
-  })[];
+  data:
+    | (Story & {
+        line: (Line & {
+          periods: Period[];
+        })[];
+      })
+    | null;
 };
 
 const getStoryForCurrentUser = async (
@@ -18,20 +20,25 @@ const getStoryForCurrentUser = async (
   const session = await getSession({ req });
 
   if (session?.user.email) {
-    const stories = await prisma.story.findMany({
+    const personWithStory = await prisma.person.findUnique({
       where: {
-        person: { email: session.user.email },
-        deletedDate: { equals: null },
+        email: session.user.email,
       },
       include: {
-        line: {
+        story: {
           include: {
-            periods: true,
+            line: {
+              include: {
+                periods: true,
+              },
+            },
           },
         },
       },
     });
-    res.json({ data: stories } as GetStoryForCurrentUserReturnType);
+    res.json({
+      data: personWithStory?.story,
+    } as GetStoryForCurrentUserReturnType);
   } else {
     res.status(401).json({ message: "You gotta be logged in" });
   }
