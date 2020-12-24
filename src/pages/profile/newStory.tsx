@@ -1,13 +1,20 @@
 import ColorInterpolate from "color-interpolate";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import Colors from "../Styles/colors";
-import Circle from "../UI/Circle";
-import SEO from "../Utilities/SEO";
+import Colors from "../../Styles/colors";
+import Circle from "../../UI/Circle";
+import SEO from "../../Utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
-import useDimensions from "../Hooks/useDimensions";
-import { APINewStoryRequest, NewStoryAPILine } from "./api/story/newStory";
+import useDimensions from "../../Hooks/useDimensions";
+import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
+import SecondaryNavbarLayout, {
+  SECONDARY_NAVBAR_HEIGHT,
+} from "../../Layout/SecondaryNavbarLayout";
+import { faPlus, faMinus, faSave } from "@fortawesome/free-solid-svg-icons";
+import SecondaryNavButton from "../../UI/SecondaryNavButton";
+import useRequest from "../../Hooks/useRequest";
+import { Story } from "@prisma/client";
 
 const NUM_INTENSITIES = 5;
 
@@ -41,12 +48,12 @@ type Address = {
   columnIndex: number;
 };
 
-type Cell = {
+type CellState = {
   intensity: number;
   selected: boolean;
 };
 
-const CELL_STATE = atom<List<List<Cell>>>({
+const CELL_STATE = atom<List<List<CellState>>>({
   key: "newStoryCellState",
   default: List([
     List(
@@ -392,12 +399,48 @@ const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps) => {
 const NewStory = () => {
   const [love, setLove] = useRecoilState(CELL_STATE);
   const [ref, dimensions] = useDimensions();
+
+  const [savingState, save] = useRequest(
+    async (): Promise<Story> => {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth();
+      const filteredAndGrouped = love.reduce(
+        (sum, line, lineIndex) =>
+          sum.update(Math.floor(lineIndex / 2), (val: List<unknown>) =>
+            (val || List()).concat(
+              // add year and month to cells,
+              line
+                .map((cell, cellIndex) => {
+                  const year = currentYear - Math.floor(cellIndex / 12);
+                  const month =
+                    ((currentMonth - 1 - (cellIndex % 12) + 12) % 12) + 1;
+                  return {
+                    ...cell,
+                    isHeartBreak: lineIndex % 2 !== 0,
+                    year,
+                    month,
+                  };
+                })
+                // Filter out the ones with no intensity
+                .filter((cell) => cell.intensity)
+            )
+          ),
+        List()
+      );
+      const resp = await fetch("/api/story/newStory", {
+        method: "POST",
+        body: JSON.stringify({ story: filteredAndGrouped.toJS() }),
+      });
+      return resp.json();
+    }
+  );
   return (
-    <>
-      <SEO title="New Story" />
-      <div className="top-menu-holder">
-        <div className="buttons">
-          <button
+    <NavbarLayout>
+      <SecondaryNavbarLayout
+        buttons={[
+          <SecondaryNavButton
+            icon={faPlus}
+            text="Add Line"
             onClick={() =>
               setLove((l) =>
                 l
@@ -419,111 +462,51 @@ const NewStory = () => {
                   )
               )
             }
-          >
-            +
-          </button>
-          <button
+          />,
+
+          <SecondaryNavButton
+            icon={faMinus}
+            text="Remove Line"
             onClick={() => setLove((l) => (l.size > 2 ? l.pop().pop() : l))}
-          >
-            -
-          </button>
-          <button
-            onClick={() => {
-              const currentYear = new Date().getFullYear();
-              const currentMonth = new Date().getMonth();
-              console.log(love.toJS());
-              const woohoo: APINewStoryRequest = {
-                story: love.toJS().map((line, lineIndex) =>
-                  line.reduce(
-                    (sum: NewStoryAPILine[], cell: Cell, index: number) => {
-                      const year = currentYear - Math.floor(index / 12);
-                      const month =
-                        ((currentMonth - 1 - (index % 12) + 12) % 12) + 1;
-                      if (cell.intensity) {
-                        sum = [
-                          ...sum,
-                          {
-                            year,
-                            month,
-                            isHeartBreak: lineIndex % 2 !== 0,
-                            intensity: cell.intensity,
-                          },
-                        ];
-                      }
-                      return sum;
-                    },
-                    []
-                  )
-                ),
-              };
-
-              fetch("/api/story/newStory", {
-                method: "POST",
-                body: JSON.stringify(woohoo),
-              }).then((resp) => resp.json().then(console.log));
-            }}
-          >
-            Save
-          </button>
+          />,
+          <SecondaryNavButton
+            icon={faSave}
+            text="Save"
+            loading={savingState.isLoading}
+            onClick={() => save()}
+          />,
+        ]}
+      >
+        <SEO title="New Story" />
+        <div className="top-menu-holder"></div>
+        <div ref={ref} className="line-holder">
+          {dimensions && (
+            <FixedSizeGrid
+              columnCount={1 + love.size}
+              columnWidth={CELL_WIDTH + CELL_MARGIN * 2}
+              height={dimensions?.height}
+              rowCount={totalCount}
+              rowHeight={CELL_HEIGHT + CELL_MARGIN * 2}
+              width={dimensions?.width}
+            >
+              {Cell}
+            </FixedSizeGrid>
+          )}
         </div>
-      </div>
-      <div ref={ref} className="line-holder">
-        {dimensions && (
-          <FixedSizeGrid
-            columnCount={1 + love.size}
-            columnWidth={CELL_WIDTH + CELL_MARGIN * 2}
-            height={dimensions?.height}
-            rowCount={totalCount}
-            rowHeight={CELL_HEIGHT + CELL_MARGIN * 2}
-            width={dimensions?.width}
-          >
-            {Cell}
-          </FixedSizeGrid>
-        )}
-      </div>
-      <style jsx>
-        {`
-          .top-menu-holder {
-            position: fixed;
-            top: 30px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 30px;
-            z-index: 3;
-          }
-          .top-menu-holder .buttons {
-            display: flex;
-          }
-
-          .top-menu-holder .buttons button {
-            flex-grow: 1;
-            margin: 0;
-            border: none;
-            background-color: #efeeee;
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            box-shadow: 3px 3px 6px #cbcaca, -3px -3px 6px #ffffff;
-            background: #efeeee;
-            margin-left: 20px;
-          }
-          .top-menu-holder .buttons button:hover {
-            cursor: pointer;
-          }
-
-          .line-holder {
-            position: fixed;
-            top: 100px;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-          }
-        `}
-      </style>
-    </>
+        <style jsx>
+          {`
+            .line-holder {
+              position: fixed;
+              top: ${NAVBAR_HEIGHT + SECONDARY_NAVBAR_HEIGHT}px;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              display: flex;
+            }
+          `}
+        </style>
+      </SecondaryNavbarLayout>
+    </NavbarLayout>
   );
 };
 

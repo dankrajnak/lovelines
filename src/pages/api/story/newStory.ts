@@ -63,6 +63,8 @@ const newStory = async (
       });
 
       res.json(story);
+    } else {
+      res.status(401).json({ message: "You gotta be logged in" });
     }
   }
 };

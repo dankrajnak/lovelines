@@ -3,8 +3,10 @@ import { signIn, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSwr from "swr";
-import CenterLayout from "../Layout/CenterLayout";
-import NavbarLayout from "../Layout/NavbarLayout";
+import CenterLayout from "../../Layout/CenterLayout";
+import NavbarLayout from "../../Layout/NavbarLayout";
+import Link from "next/link";
+import SEO from "../../Utilities/SEO";
 
 const Profile: React.FunctionComponent = () => {
   const [session, loading] = useSession();
@@ -26,10 +28,11 @@ const Profile: React.FunctionComponent = () => {
   return (
     <NavbarLayout>
       <CenterLayout height="100vh">
+        <SEO title="Profile" />
         <h1>Hey, {data?.name}</h1>
-        {/* <button onClick={() => mutate({ ...data, name: "MICHAEL" })}>
-          mutate
-        </button> */}
+        <div>
+          <Link href="/profile/newStory">Make a new story</Link>
+        </div>
       </CenterLayout>
     </NavbarLayout>
   );
