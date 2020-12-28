@@ -2,8 +2,9 @@ import useRequest from "../../Hooks/useRequest";
 import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
 import SEO from "../../Utilities/SEO";
 import { GetStoryForCurrentUserReturnType } from "../api/story/forCurrentUser";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import CenterLayout from "../../Layout/CenterLayout";
+import StoryComp from "../../UI/Story";
 
 const getMyStory = (): Promise<GetStoryForCurrentUserReturnType> =>
   fetch("/api/story/forCurrentUser", { method: "GET" }).then((resp) =>
@@ -21,10 +22,9 @@ const MyStory = () => {
       <CenterLayout>
         <div style={{ height: NAVBAR_HEIGHT }} />
         <SEO title="My Story" />
-        {myStoryState.data ? (
+        {myStoryState.data?.data ? (
           <>
-            Here's your story:{" "}
-            <pre>{JSON.stringify(myStoryState.data, null, 2)}</pre>
+            Here's your story: <StoryComp story={myStoryState.data.data} />
           </>
         ) : (
           <>Loading...</>

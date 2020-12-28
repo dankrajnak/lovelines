@@ -1,4 +1,3 @@
-import ColorInterpolate from "color-interpolate";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
 import Colors from "../../Styles/colors";
@@ -15,15 +14,7 @@ import { faPlus, faMinus, faSave } from "@fortawesome/free-solid-svg-icons";
 import SecondaryNavButton from "../../UI/SecondaryNavButton";
 import useRequest from "../../Hooks/useRequest";
 import { Story } from "@prisma/client";
-
-const NUM_INTENSITIES = 5;
-
-const LOVE_COLORS = [Colors.red, Colors.blue, Colors.orange, Colors.green].map(
-  (color) => ({
-    color,
-    interpolator: ColorInterpolate([Colors.white, color]),
-  })
-);
+import LOVE_COLORS, { NUM_INTENSITIES } from "../../Utilities/loveColors";
 
 const CELL_HEIGHT = 40;
 const CELL_MARGIN = 10;
