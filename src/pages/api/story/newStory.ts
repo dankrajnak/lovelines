@@ -43,7 +43,7 @@ const newStory = async (
           Person: {
             connect: { email: session.user.email },
           },
-          line: {
+          lines: {
             create: data.story.map((line) => ({
               createdDate: now,
               periods: {

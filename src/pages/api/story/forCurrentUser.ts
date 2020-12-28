@@ -6,7 +6,7 @@ import prisma from "../../../Server/prisma";
 export type GetStoryForCurrentUserReturnType = {
   data:
     | (Story & {
-        line: (Line & {
+        lines: (Line & {
           periods: Period[];
         })[];
       })
@@ -27,7 +27,7 @@ const getStoryForCurrentUser = async (
       include: {
         story: {
           include: {
-            line: {
+            lines: {
               include: {
                 periods: true,
               },
