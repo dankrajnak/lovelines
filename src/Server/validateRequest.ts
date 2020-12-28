@@ -1,6 +1,7 @@
 import { NextApiResponse } from "next";
 import Ajv, { JSONSchemaType, DefinedError } from "ajv";
 import { NextApiRequest } from "next-auth/_utils";
+import { Either, success, failure } from "../Utilities/Either";
 
 const ajv = new Ajv();
 
@@ -36,12 +37,13 @@ export const validateRequest = <T>(
   body: unknown,
   res: NextApiResponse,
   schema: JSONSchemaType<T>
-): T | void => {
+): Either<T, ErrorResponse> => {
   const validated = validate<T>(body, schema);
   if (validated.isValid) {
-    return validated.data;
+    return success(validated.data);
   } else {
     res.status(400).json(validated.error);
+    return failure(validated.error);
   }
 };
 
@@ -49,13 +51,14 @@ export const validateRequestBody = <T>(
   req: NextApiRequest,
   res: NextApiResponse,
   schema: JSONSchemaType<T>
-): T | void => validateRequest(JSON.parse(req.body), res, schema);
+): Either<T, ErrorResponse> =>
+  validateRequest(JSON.parse(req.body), res, schema);
 
 export const validateRequestBodyUnsafe = <T>(
   req: NextApiRequest,
   res: NextApiResponse,
   schema: unknown
-): T | void =>
+): Either<T, ErrorResponse> =>
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   validateRequest(JSON.parse(req.body), res, schema);

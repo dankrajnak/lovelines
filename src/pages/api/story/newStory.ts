@@ -27,12 +27,12 @@ const newStory = async (
   req: NextApiRequest,
   res: NextApiResponse<any>
 ): Promise<void> => {
-  const data = validateRequestBodyUnsafe<APINewStoryRequest>(
+  const validated = validateRequestBodyUnsafe<APINewStoryRequest>(
     req,
     res,
     APINewStoryRequestSchema
   );
-  if (data) {
+  validated.onSuccess(async (data) => {
     const session = await getSession({ req });
     const now = new Date();
     if (session?.user.email) {
@@ -66,7 +66,7 @@ const newStory = async (
     } else {
       res.status(401).json({ message: "You gotta be logged in" });
     }
-  }
+  });
 };
 
 export default newStory;
