@@ -25,6 +25,11 @@ export const getYearMonthFromNum = (yearMonth: number): YearMonth => ({
   month: getMonthFromNum(yearMonth),
 });
 
+export const getYearMonthFromDate = (date: Date): YearMonth => ({
+  year: date.getFullYear(),
+  month: date.getMonth(),
+});
+
 export const getNumFromYearMonth = (yearMonth: YearMonth): number =>
   yearMonth.year * 100 + yearMonth.month;
 
