@@ -1,6 +1,5 @@
-import { Session } from "next-auth/client";
 import { NextApiRequest, NextApiResponse } from "next-auth/_utils";
-import grabSession from "./grabSession";
+import grabSession, { SessionWithDefinedEmail } from "./grabSession";
 
 export const handleNoSession = (res: NextApiResponse): void => {
   res.status(401).json({
@@ -8,19 +7,19 @@ export const handleNoSession = (res: NextApiResponse): void => {
   });
 };
 
-const withSession = async <T>(
+const withSession = <T>(
   apiMethod: (
     req: NextApiRequest,
     res: NextApiResponse<T>,
-    session: Session
+    session: SessionWithDefinedEmail
   ) => Promise<void>
 ) => async (
   req: NextApiRequest,
   res: NextApiResponse<T | { message: string }>
 ): Promise<void> => {
-  const sesh = await grabSession({ req });
-  sesh.onSuccess((s) => apiMethod(req, res, s));
-  sesh.onFailure((_) => handleNoSession(res));
+  const session = await grabSession({ req });
+  session.onSuccess((s) => apiMethod(req, res, s));
+  session.onFailure((_) => handleNoSession(res));
 };
 
 export default withSession;
