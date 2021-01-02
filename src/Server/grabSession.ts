@@ -2,7 +2,9 @@ import { User } from "next-auth";
 import { getSession, Session } from "next-auth/client";
 import { Either, failure, success } from "../Utilities/Either";
 
-type SessionWithDefinedEmail = Session & { user: User & { email: string } };
+export type SessionWithDefinedEmail = Session & {
+  user: User & { email: string };
+};
 
 const grabSession = async (
   ...params: Parameters<typeof getSession>

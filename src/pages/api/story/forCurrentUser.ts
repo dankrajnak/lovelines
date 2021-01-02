@@ -1,6 +1,6 @@
 import { Line, Period, Story } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { Session } from "next-auth/client";
+import { SessionWithDefinedEmail } from "../../../Server/grabSession";
 import prisma from "../../../Server/prisma";
 import withSession from "../../../Server/withSession";
 
@@ -15,31 +15,29 @@ export type GetStoryForCurrentUserReturnType = {
 };
 
 const getStoryForCurrentUser = async (
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse<any>,
-  session: Session
+  session: SessionWithDefinedEmail
 ): Promise<void> => {
-  if (session.user.email) {
-    const personWithStory = await prisma.person.findUnique({
-      where: {
-        email: session.user.email,
-      },
-      include: {
-        story: {
-          include: {
-            lines: {
-              include: {
-                periods: true,
-              },
+  const personWithStory = await prisma.person.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    include: {
+      story: {
+        include: {
+          lines: {
+            include: {
+              periods: true,
             },
           },
         },
       },
-    });
-    res.json({
-      data: personWithStory?.story,
-    } as GetStoryForCurrentUserReturnType);
-  }
+    },
+  });
+  res.json({
+    data: personWithStory?.story,
+  } as GetStoryForCurrentUserReturnType);
 };
 
 export default withSession(getStoryForCurrentUser);
