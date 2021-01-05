@@ -1,8 +1,8 @@
 import { Line, Period, Story } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { SessionWithDefinedEmail } from "../../../Server/grabSession";
 import prisma from "../../../Server/prisma";
-import withSession from "../../../Server/withSession";
+import withHelpers from "../../../Server/withHelpers";
+import sessionHelper from "../../../Server/withSession";
 
 export type GetStoryForCurrentUserReturnType = {
   data:
@@ -14,30 +14,31 @@ export type GetStoryForCurrentUserReturnType = {
     | null;
 };
 
-const getStoryForCurrentUser = async (
-  _req: NextApiRequest,
-  res: NextApiResponse<any>,
-  session: SessionWithDefinedEmail
-): Promise<void> => {
-  const personWithStory = await prisma.person.findUnique({
-    where: {
-      email: session.user.email,
-    },
-    include: {
-      story: {
-        include: {
-          lines: {
-            include: {
-              periods: true,
+export default withHelpers(
+  { session: sessionHelper },
+  async (
+    { session },
+    _req: NextApiRequest,
+    res: NextApiResponse<any>
+  ): Promise<void> => {
+    const personWithStory = await prisma.person.findUnique({
+      where: {
+        email: session.user.email,
+      },
+      include: {
+        story: {
+          include: {
+            lines: {
+              include: {
+                periods: true,
+              },
             },
           },
         },
       },
-    },
-  });
-  res.json({
-    data: personWithStory?.story,
-  } as GetStoryForCurrentUserReturnType);
-};
-
-export default withSession(getStoryForCurrentUser);
+    });
+    res.json({
+      data: personWithStory?.story,
+    } as GetStoryForCurrentUserReturnType);
+  }
+);

@@ -145,7 +145,7 @@ const defaultConfig = {};
 function useRequest<T, P extends Array<unknown>>(
   serviceMethod: (...args: P) => Promise<T> | null,
   config?: useRequestConfig<T>
-): [useRequestState<T>, typeof serviceMethod, useRequestActions<T>] {
+): [useRequestState<T>, (...args: P) => Promise<T>, useRequestActions<T>] {
   const safeConfig: Config<T> = useMemo(
     () => ({ ...defaultConfig, ...config }),
     [config]
@@ -164,7 +164,7 @@ function useRequest<T, P extends Array<unknown>>(
    * of previously made requests.  We store a method to ignore the last promise in a ref.
    */
   const ignoreLastPromise = useRef(() => {});
-  const refresh: typeof serviceMethod = useMemo(
+  const refresh: (...args: P) => Promise<T> = useMemo(
     () => (...args) => {
       const promise = serviceMethod(...args);
       if (!promise) {

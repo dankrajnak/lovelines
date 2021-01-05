@@ -1,9 +1,12 @@
 import { NextApiResponse } from "next";
 import Ajv, { JSONSchemaType, DefinedError } from "ajv";
+import addFormats from "ajv-formats";
+
 import { NextApiRequest } from "next-auth/_utils";
 import { Either, success, failure } from "../Utilities/Either";
 
 const ajv = new Ajv();
+addFormats(ajv as any);
 
 export type ErrorResponse = {
   message: string;
@@ -59,8 +62,12 @@ export const validateRequestBodyUnsafe = <T>(
   res: NextApiResponse,
   schema: unknown
 ): Either<T, ErrorResponse> =>
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  validateRequest(JSON.parse(req.body), res, schema);
+  validateRequest(
+    typeof req.body === "string" ? JSON.parse(req.body) : req.body,
+    res,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    schema
+  );
 
 export default validateRequest;

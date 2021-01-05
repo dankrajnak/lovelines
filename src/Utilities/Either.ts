@@ -3,8 +3,10 @@ export type Either<L, R> = Success<L, R> | Failure<L, R>;
 interface EitherComponent<S, F> {
   isSuccess(): boolean;
   isFailure(): boolean;
-  onSuccess<B>(func: (s: S) => B): Either<B, F>;
-  onFailure<B>(func: (f: F) => B): Either<S, B>;
+  whenSuccess<B>(func: (s: S) => B): Either<B, F>;
+  whenFailure<B>(func: (f: F) => B): Either<S, B>;
+  whenSuccessAsync<B>(func: (s: S) => Promise<B>): Promise<Either<B, F>>;
+  whenFailureAsync<B>(func: (f: F) => Promise<B>): Promise<Either<S, B>>;
 }
 
 export class Success<S, F> implements EitherComponent<S, F> {
@@ -22,11 +24,19 @@ export class Success<S, F> implements EitherComponent<S, F> {
     return false;
   }
 
-  onSuccess<B>(func: (l: S) => B): Either<B, F> {
+  whenSuccess<B>(func: (s: S) => B): Either<B, F> {
     return new Success(func(this.value));
   }
 
-  onFailure<B>(_: (f: F) => B): Either<S, B> {
+  whenFailure<B>(_: (f: F) => B): Either<S, B> {
+    return this as any;
+  }
+
+  async whenSuccessAsync<B>(func: (s: S) => Promise<B>): Promise<Either<B, F>> {
+    return new Success(await func(this.value));
+  }
+
+  async whenFailureAsync<B>(_: (f: F) => Promise<B>): Promise<Either<S, B>> {
     return this as any;
   }
 }
@@ -46,15 +56,23 @@ export class Failure<S, F> implements EitherComponent<S, F> {
     return true;
   }
 
-  onSuccess<B>(_: (s: S) => B): Either<B, F> {
+  whenSuccess<B>(_: (s: S) => B): Either<B, F> {
     return this as any;
   }
 
-  onFailure<B>(func: (f: F) => B): Either<S, B> {
+  whenFailure<B>(func: (f: F) => B): Either<S, B> {
     return new Failure(func(this.value));
+  }
+
+  async whenSuccessAsync<B>(_: (s: S) => Promise<B>): Promise<Either<B, F>> {
+    return this as any;
+  }
+
+  async whenFailureAsync<B>(func: (f: F) => Promise<B>): Promise<Either<S, B>> {
+    return new Failure(await func(this.value));
   }
 }
 
-export const success = <L, R>(l: L): Either<L, R> => new Success<L, R>(l);
+export const success = <S, F>(s: S): Either<S, F> => new Success<S, F>(s);
 
-export const failure = <L, R>(r: R): Either<L, R> => new Failure<L, R>(r);
+export const failure = <S, F>(f: F): Either<S, F> => new Failure<S, F>(f);
