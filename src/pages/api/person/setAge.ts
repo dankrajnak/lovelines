@@ -1,41 +1,43 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { APISetAgeRequestSchema } from "../../../Server/apiSchemas";
-import { validateRequestBodyUnsafe } from "../../../Server/validateRequest";
 import prisma from "../../../Server/prisma";
-import grabSession from "../../../Server/grabSession";
-import { handleNoSession } from "../../../Server/withSession";
+import sessionHelper from "../../../Server/withSession";
 import {
   getNumFromYearMonth,
   getYearMonthFromDate,
 } from "../../../Utilities/yearMonthUtilities";
+import withHelpers from "../../../Server/withHelpers";
+import validationHelper from "../../../Server/withValidate";
 
 export type APISetAgeRequest = {
-  birthday: Date;
+  year: number;
+  month: number;
+  day: number;
 };
 
-// Temporary method to set the age on a user
-const setAge = async (
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-): Promise<void> => {
-  const validated = validateRequestBodyUnsafe<APISetAgeRequest>(
-    req,
-    res,
-    APISetAgeRequestSchema
-  );
-  validated.onSuccess(async ({ birthday }) => {
-    const session = await grabSession({ req });
-    session.onFailure(() => handleNoSession(res));
-    session.onSuccess(({ user }) => {
-      prisma.person.update({
-        where: { email: user.email },
-        data: {
-          ageDate: birthday,
-          ageYearMonth: getNumFromYearMonth(getYearMonthFromDate(birthday)),
-        },
-      });
+export default withHelpers(
+  {
+    validated: validationHelper<APISetAgeRequest>(APISetAgeRequestSchema),
+    session: sessionHelper,
+  },
+  async (
+    { session, validated },
+    _: NextApiRequest,
+    res: NextApiResponse
+  ): Promise<void> => {
+    console.log("valid", validated);
+    const { year, month, day } = validated;
+    const { user } = session;
+    const birthdayDate = new Date(year, month, day);
+
+    const person = await prisma.person.update({
+      where: { email: user.email },
+      data: {
+        ageDate: birthdayDate,
+        ageYearMonth: getNumFromYearMonth(getYearMonthFromDate(birthdayDate)),
+      },
     });
-  });
-};
 
-export default setAge;
+    res.json(person);
+  }
+);

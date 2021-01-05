@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next-auth/_utils";
 import grabSession, { SessionWithDefinedEmail } from "./grabSession";
+import { Helper } from "./withHelpers";
 
 export const handleNoSession = (res: NextApiResponse): void => {
   res.status(401).json({
@@ -7,19 +8,16 @@ export const handleNoSession = (res: NextApiResponse): void => {
   });
 };
 
-const withSession = <T>(
-  apiMethod: (
-    req: NextApiRequest,
-    res: NextApiResponse<T>,
-    session: SessionWithDefinedEmail
-  ) => Promise<void>
-) => async (
-  req: NextApiRequest,
-  res: NextApiResponse<T | { message: string }>
-): Promise<void> => {
+const sessionHelper: Helper<
+  [NextApiRequest, NextApiResponse],
+  Promise<SessionWithDefinedEmail>
+> = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await grabSession({ req });
-  session.onSuccess((s) => apiMethod(req, res, s));
-  session.onFailure((_) => handleNoSession(res));
+  if (session.isSuccess()) {
+    return session.value;
+  }
+  session.whenFailure((_) => handleNoSession(res));
+  throw new Error("no session");
 };
 
-export default withSession;
+export default sessionHelper;

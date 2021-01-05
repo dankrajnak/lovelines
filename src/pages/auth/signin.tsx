@@ -56,41 +56,39 @@ const SignIn = ({
   }
   return (
     <>
-      <NavbarLayout>
-        <CenterLayout height="100vh">
-          <div className="card">
-            <Logo />
-            {errorMessage ? (
-              <div className="error">{errorMessage}</div>
-            ) : (
-              <div style={{ textAlign: "center", marginBottom: 8 }}>
-                No information is shared with these apps. They are only used to
-                securely log you in without a password.
-              </div>
-            )}
-            <div className="providers-holder">
-              {Object.values(providers).map((provider) => (
-                <button
-                  key={provider.id}
-                  className="provider-button"
-                  onClick={() =>
-                    signIn(provider.id, {
-                      callbackUrl: router.query.callbackUrl as string,
-                    })
-                  }
-                >
-                  <FontAwesomeIcon
-                    fixedWidth
-                    icon={nameToIcon[provider.name]}
-                    style={{ marginRight: 5 }}
-                  />
-                  {provider.name}
-                </button>
-              ))}
+      <CenterLayout height="100vh">
+        <div className="card">
+          <Logo />
+          {errorMessage ? (
+            <div className="error">{errorMessage}</div>
+          ) : (
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              No information is shared with these apps. They are only used to
+              securely log you in without a password.
             </div>
+          )}
+          <div className="providers-holder">
+            {Object.values(providers).map((provider) => (
+              <button
+                key={provider.id}
+                className="provider-button"
+                onClick={() =>
+                  signIn(provider.id, {
+                    callbackUrl: router.query.callbackUrl as string,
+                  })
+                }
+              >
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon={nameToIcon[provider.name]}
+                  style={{ marginRight: 5 }}
+                />
+                {provider.name}
+              </button>
+            ))}
           </div>
-        </CenterLayout>
-      </NavbarLayout>
+        </div>
+      </CenterLayout>
       <style jsx>
         {`
           .card {

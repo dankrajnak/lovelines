@@ -2,13 +2,17 @@
 export const APISetAgeRequestSchema = {
   type: "object",
   properties: {
-    birthday: {
-      description: "Enables basic storage and retrieval of dates and times.",
-      type: "string",
-      format: "date-time",
+    year: {
+      type: "number",
+    },
+    month: {
+      type: "number",
+    },
+    day: {
+      type: "number",
     },
   },
-  required: ["birthday"],
+  required: ["day", "month", "year"],
   $schema: "http://json-schema.org/draft-07/schema#",
 } as const;
 
