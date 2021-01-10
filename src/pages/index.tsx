@@ -1,10 +1,10 @@
 import SEO from "../Utilities/SEO";
-import Logo from "../UI/Logo";
 import Colors from "../Styles/colors";
 import useScrollPosition from "@react-hook/window-scroll";
 import FadeIn from "../UI/FadeIn";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { Row, Col, Typography } from "antd";
+import { Typography } from "antd";
+import Container from "../UI/Container";
 
 const { Title, Paragraph } = Typography;
 
@@ -26,6 +26,7 @@ const CenteredAbsolute: React.FunctionComponent<{
         position: absolute;
         display: flex;
         width: 100%;
+        z-index: 1000;
         justify-content: center;
       }
     `}</style>
@@ -51,17 +52,15 @@ const Home = () => {
           }}
         >
           <FadeIn>
-            <Row>
-              <Col>
-                <Title level={1} style={{ textAlign: "center" }}>
-                  Hey There.
-                </Title>
-                <Paragraph style={{ textAlign: "center" }}>
-                  Welcome to LoveLines, an art project to explore and compare
-                  our relationship to love and heartbreak.
-                </Paragraph>
-              </Col>
-            </Row>
+            <Container>
+              <Title level={1} style={{ textAlign: "center" }}>
+                Hey There.
+              </Title>
+              <Paragraph style={{ textAlign: "center" }}>
+                Welcome to LoveLines, an art project to explore and compare our
+                relationship to love and heartbreak.
+              </Paragraph>
+            </Container>
           </FadeIn>
         </div>
       </CenteredAbsolute>
@@ -74,13 +73,13 @@ const Home = () => {
       </CenteredAbsolute>
       <CenteredAbsolute top="1000px">
         <FadeIn>
-          <div>
+          <Container>
             <Title level={1}>The Shape of Stories</Title>
             <Paragraph>
               Think about all the romantic relationships you've had so far.
               What's the simplest way you could represent them visually?
             </Paragraph>
-          </div>
+          </Container>
         </FadeIn>
       </CenteredAbsolute>
       <div className="path-container">
