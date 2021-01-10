@@ -72,16 +72,17 @@ const Home = () => {
           </div>
         </FadeIn>
       </CenteredAbsolute>
-      <div className="logo-container">
-        <div className="logo-holder">
-          <FadeIn>
-            <div>
-              <Logo />
-              <div className="description">Under construction</div>
-            </div>
-          </FadeIn>
-        </div>
-      </div>
+      <CenteredAbsolute top="1000px">
+        <FadeIn>
+          <div>
+            <Title level={1}>The Shape of Stories</Title>
+            <Paragraph>
+              Think about all the romantic relationships you've had so far.
+              What's the simplest way you could represent them visually?
+            </Paragraph>
+          </div>
+        </FadeIn>
+      </CenteredAbsolute>
       <div className="path-container">
         <div className="path-holder">
           <svg
@@ -119,20 +120,6 @@ const Home = () => {
         .path-holder svg {
           width: 100vw;
           max-width: ${SVG_WIDTH}px;
-        }
-
-        .description {
-          font-weight: lighter;
-        }
-        .logo-container {
-          position: absolute;
-          top: 1000px;
-          z-index: 200;
-        }
-        .logo-holder {
-          width: 100vw;
-          display: flex;
-          justify-content: center;
         }
       `}</style>
     </>
