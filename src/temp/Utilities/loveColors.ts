@@ -1,4 +1,4 @@
-import Colors from "../styles/colors";
+import Colors from "../Styles/colors";
 import ColorInterpolate from "color-interpolate";
 
 export type LoveColor = {

@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import { Session, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
-import CenterLayout from "../layout/CenterLayout";
+import CenterLayout from "../Layout/CenterLayout";
 import SEO from "./SEO";
 
 const DefaultLoader = () => (
