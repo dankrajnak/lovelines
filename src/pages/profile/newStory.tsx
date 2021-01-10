@@ -10,7 +10,7 @@ import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
 import SecondaryNavbarLayout, {
   SECONDARY_NAVBAR_HEIGHT,
 } from "../../Layout/SecondaryNavbarLayout";
-import { faPlus, faMinus, faSave } from "@fortawesome/free-solid-svg-icons";
+import { SaveOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import SecondaryNavButton from "../../UI/SecondaryNavButton";
 import useRequest from "../../Hooks/useRequest";
 import { Story } from "@prisma/client";
@@ -430,7 +430,7 @@ const NewStory = () => {
       <SecondaryNavbarLayout
         buttons={[
           <SecondaryNavButton
-            icon={faPlus}
+            icon={<PlusOutlined />}
             text="Add Line"
             onClick={() =>
               setLove((l) =>
@@ -456,12 +456,12 @@ const NewStory = () => {
           />,
 
           <SecondaryNavButton
-            icon={faMinus}
+            icon={<MinusOutlined />}
             text="Remove Line"
             onClick={() => setLove((l) => (l.size > 2 ? l.pop().pop() : l))}
           />,
           <SecondaryNavButton
-            icon={faSave}
+            icon={<SaveOutlined />}
             text="Save"
             loading={savingState.isLoading}
             onClick={() => save()}

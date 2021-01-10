@@ -3,17 +3,16 @@ import CenterLayout from "../../Layout/CenterLayout";
 import Colors from "../../Styles/colors";
 import Logo from "../../UI/Logo";
 import {
-  faGithub,
-  faFacebook,
-  faGoogle,
-} from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+  GoogleOutlined,
+  FacebookFilled,
+  GithubOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/router";
 
 const nameToIcon = {
-  Google: faGoogle,
-  Facebook: faFacebook,
-  GitHub: faGithub,
+  Google: <GoogleOutlined />,
+  Facebook: <FacebookFilled />,
+  GitHub: <GithubOutlined />,
 };
 
 const SignIn = ({
@@ -77,11 +76,9 @@ const SignIn = ({
                   })
                 }
               >
-                <FontAwesomeIcon
-                  fixedWidth
-                  icon={nameToIcon[provider.name]}
-                  style={{ marginRight: 5 }}
-                />
+                <span style={{ marginRight: 5 }}>
+                  {nameToIcon[provider.name]}
+                </span>
                 {provider.name}
               </button>
             ))}

@@ -1,8 +1,7 @@
-import { IconDefinition, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LoadingOutlined } from "@ant-design/icons";
 
 type Props = {
-  icon: IconDefinition;
+  icon: React.ReactNode;
   text: string;
   onClick: () => any;
   description?: string;
@@ -18,22 +17,7 @@ const SecondaryNavButton: React.FunctionComponent<Props> = ({
 }) => (
   <span style={{ display: "flex", alignItems: "center" }}>
     <button onClick={onClick} title={description} disabled={!!loading}>
-      {loading ? (
-        <FontAwesomeIcon
-          icon={faSpinner}
-          style={{ marginRight: 5 }}
-          fixedWidth
-          size="sm"
-          spin
-        />
-      ) : (
-        <FontAwesomeIcon
-          icon={icon}
-          style={{ marginRight: 5 }}
-          fixedWidth
-          size="sm"
-        />
-      )}
+      <span>{loading ? <LoadingOutlined /> : icon}</span>
       {text}
     </button>
     <style jsx>
@@ -45,6 +29,10 @@ const SecondaryNavButton: React.FunctionComponent<Props> = ({
           padding: 5px 20px;
           border: none;
           background: none;
+        }
+
+        button > span {
+          margin-right: 5px;
         }
 
         button:hover {
