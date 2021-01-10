@@ -56,7 +56,7 @@ const Home = () => {
                 <Title level={1} style={{ textAlign: "center" }}>
                   Hey There.
                 </Title>
-                <Paragraph>
+                <Paragraph style={{ textAlign: "center" }}>
                   Welcome to LoveLines, an art project to explore and compare
                   our relationship to love and heartbreak.
                 </Paragraph>
@@ -66,7 +66,7 @@ const Home = () => {
         </div>
       </CenteredAbsolute>
       <CenteredAbsolute bottom="10%" top={null}>
-        <FadeIn rootMargin="-90% 0 0 0">
+        <FadeIn rootMargin="-90% 0px 0px 0px">
           <div>
             Scroll <CaretDownOutlined />
           </div>

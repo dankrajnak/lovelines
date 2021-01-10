@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 const FadeIn: React.FunctionComponent<{
   fadeS?: number;
   rootMargin?: string;
-}> = ({ children, fadeS = 1, rootMargin = "-20% 0 -40% 0" }) => {
+}> = ({ children, fadeS = 1, rootMargin = "-20% 0px -40% 0px" }) => {
   const [isVisible, setVisible] = useState(false);
 
   const domRef = useRef<HTMLDivElement | null>(null);
