@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { APISetAgeRequestSchema } from "../../../server/apiSchemas";
-import prisma from "../../../server/prisma";
-import sessionHelper from "../../../server/withSession";
+import { APISetAgeRequestSchema } from "../../../Server/apiSchemas";
+import prisma from "../../../Server/prisma";
+import sessionHelper from "../../../Server/withSession";
 import {
   getNumFromYearMonth,
   getYearMonthFromDate,
 } from "../../../Utilities/yearMonthUtilities";
-import withHelpers from "../../../server/withHelpers";
-import validationHelper from "../../../server/withValidate";
+import withHelpers from "../../../Server/withHelpers";
+import validationHelper from "../../../Server/withValidate";
 
 export type APISetAgeRequest = {
   year: number;

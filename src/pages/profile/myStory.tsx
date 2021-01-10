@@ -1,10 +1,10 @@
-import useRequest from "../../hooks/useRequest";
-import NavbarLayout, { NAVBAR_HEIGHT } from "../../layout/NavbarLayout";
+import useRequest from "../../Hooks/useRequest";
+import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
 import SEO from "../../Utilities/SEO";
 import { GetStoryForCurrentUserReturnType } from "../api/story/forCurrentUser";
 import React, { useEffect } from "react";
-import CenterLayout from "../../layout/CenterLayout";
-import StoryComp from "../../ui/Story";
+import CenterLayout from "../../Layout/CenterLayout";
+import StoryComp from "../../UI/Story";
 
 const getMyStory = (): Promise<GetStoryForCurrentUserReturnType> =>
   fetch("/api/story/forCurrentUser", { method: "GET" }).then((resp) =>

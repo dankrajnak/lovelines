@@ -1,8 +1,8 @@
 import SEO from "../Utilities/SEO";
-import Logo from "../ui/Logo";
-import Colors from "../styles/colors";
+import Logo from "../UI/Logo";
+import Colors from "../Styles/colors";
 import useScrollPosition from "@react-hook/window-scroll";
-import FadeIn from "../ui/FadeIn";
+import FadeIn from "../UI/FadeIn";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Row, Col, Typography } from "antd";
 

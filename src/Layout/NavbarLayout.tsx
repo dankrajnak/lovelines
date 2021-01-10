@@ -1,7 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Colors from "../styles/colors";
+import Colors from "../Styles/colors";
 
 export const NAVBAR_HEIGHT = 50 as const;
 

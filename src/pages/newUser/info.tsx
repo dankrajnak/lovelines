@@ -1,7 +1,7 @@
 import { Button, DatePicker, Space, Form, Steps, message } from "antd";
-import CenterLayout from "../../layout/CenterLayout";
+import CenterLayout from "../../Layout/CenterLayout";
 import SEO from "../../Utilities/SEO";
-import NeuCard from "../../ui/NeuCard";
+import NeuCard from "../../UI/NeuCard";
 import withLoggedIn from "../../Utilities/withLoggedIn";
 import moment, { Moment } from "moment";
 import axios from "axios";
@@ -11,7 +11,7 @@ import {
   HighlightOutlined,
   SmileOutlined,
 } from "@ant-design/icons";
-import useRequest from "../../hooks/useRequest";
+import useRequest from "../../Hooks/useRequest";
 import { APISetAgeRequest } from "../api/person/setAge";
 
 const { Step } = Steps;

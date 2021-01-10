@@ -1,6 +1,6 @@
 import { Line, Period, Story } from "@prisma/client";
 import { ReactNode, useCallback, useMemo } from "react";
-import Colors from "../styles/colors";
+import Colors from "../Styles/colors";
 import LOVE_COLORS, { NUM_INTENSITIES } from "../Utilities/loveColors";
 import {
   getMonthsBetween,

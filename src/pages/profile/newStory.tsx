@@ -1,18 +1,18 @@
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import Colors from "../../styles/colors";
-import Circle from "../../ui/Circle";
+import Colors from "../../Styles/colors";
+import Circle from "../../UI/Circle";
 import SEO from "../../Utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
-import useDimensions from "../../hooks/useDimensions";
-import NavbarLayout, { NAVBAR_HEIGHT } from "../../layout/NavbarLayout";
+import useDimensions from "../../Hooks/useDimensions";
+import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
 import SecondaryNavbarLayout, {
   SECONDARY_NAVBAR_HEIGHT,
-} from "../../layout/SecondaryNavbarLayout";
+} from "../../Layout/SecondaryNavbarLayout";
 import { faPlus, faMinus, faSave } from "@fortawesome/free-solid-svg-icons";
-import SecondaryNavButton from "../../ui/SecondaryNavButton";
-import useRequest from "../../hooks/useRequest";
+import SecondaryNavButton from "../../UI/SecondaryNavButton";
+import useRequest from "../../Hooks/useRequest";
 import { Story } from "@prisma/client";
 import LOVE_COLORS, { NUM_INTENSITIES } from "../../Utilities/loveColors";
 

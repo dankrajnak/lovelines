@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
-import { APITestRequestSchema } from "../../server/apiSchemas";
-import prisma from "../../server/prisma";
-import { validateRequestBodyUnsafe } from "../../server/validateRequest";
+import { APITestRequestSchema } from "../../Server/apiSchemas";
+import prisma from "../../Server/prisma";
+import { validateRequestBodyUnsafe } from "../../Server/validateRequest";
 
 type APITestRequest = {
   /**

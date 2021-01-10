@@ -1,5 +1,5 @@
-import Colors from "../styles/colors";
-import useDimensions from "../hooks/useDimensions";
+import Colors from "../Styles/colors";
+import useDimensions from "../Hooks/useDimensions";
 
 type Props = { width?: string; height?: string };
 

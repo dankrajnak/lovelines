@@ -1,4 +1,4 @@
-import Colors from "../styles/colors";
+import Colors from "../Styles/colors";
 import { NAVBAR_HEIGHT } from "./NavbarLayout";
 
 export const SECONDARY_NAVBAR_HEIGHT = 40 as const;
