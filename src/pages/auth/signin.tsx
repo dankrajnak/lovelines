@@ -1,7 +1,7 @@
 import { providers, signIn, SessionProvider } from "next-auth/client";
-import CenterLayout from "../../temp/Layout/CenterLayout";
-import Colors from "../../temp/Styles/colors";
-import Logo from "../../temp/UI/Logo";
+import CenterLayout from "../../Layout/CenterLayout";
+import Colors from "../../Styles/colors";
+import Logo from "../../UI/Logo";
 import {
   faGithub,
   faFacebook,
@@ -9,7 +9,6 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
-import NavbarLayout from "../../temp/Layout/NavbarLayout";
 
 const nameToIcon = {
   Google: faGoogle,

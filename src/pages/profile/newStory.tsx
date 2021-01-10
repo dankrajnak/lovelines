@@ -1,20 +1,20 @@
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import Colors from "../../temp/Styles/colors";
-import Circle from "../../temp/UI/Circle";
-import SEO from "../../temp/Utilities/SEO";
+import Colors from "../../Styles/colors";
+import Circle from "../../UI/Circle";
+import SEO from "../../Utilities/SEO";
 import { List } from "immutable";
 import { atom, useRecoilState } from "recoil";
-import useDimensions from "../../temp/Hooks/useDimensions";
-import NavbarLayout, { NAVBAR_HEIGHT } from "../../temp/Layout/NavbarLayout";
+import useDimensions from "../../Hooks/useDimensions";
+import NavbarLayout, { NAVBAR_HEIGHT } from "../../Layout/NavbarLayout";
 import SecondaryNavbarLayout, {
   SECONDARY_NAVBAR_HEIGHT,
-} from "../../temp/Layout/SecondaryNavbarLayout";
+} from "../../Layout/SecondaryNavbarLayout";
 import { faPlus, faMinus, faSave } from "@fortawesome/free-solid-svg-icons";
-import SecondaryNavButton from "../../temp/UI/SecondaryNavButton";
-import useRequest from "../../temp/Hooks/useRequest";
+import SecondaryNavButton from "../../UI/SecondaryNavButton";
+import useRequest from "../../Hooks/useRequest";
 import { Story } from "@prisma/client";
-import LOVE_COLORS, { NUM_INTENSITIES } from "../../temp/Utilities/loveColors";
+import LOVE_COLORS, { NUM_INTENSITIES } from "../../Utilities/loveColors";
 
 const CELL_HEIGHT = 40;
 const CELL_MARGIN = 10;

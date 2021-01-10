@@ -1,9 +1,9 @@
 import { Button, Divider, Space, Typography } from "antd";
 
-import CenterLayout from "../../temp/Layout/CenterLayout";
-import SEO from "../../temp/Utilities/SEO";
-import NeuCard from "../../temp/UI/NeuCard";
-import withLoggedIn from "../../temp/Utilities/withLoggedIn";
+import CenterLayout from "../../Layout/CenterLayout";
+import SEO from "../../Utilities/SEO";
+import NeuCard from "../../UI/NeuCard";
+import withLoggedIn from "../../Utilities/withLoggedIn";
 import Link from "next/link";
 
 const { Title, Text } = Typography;

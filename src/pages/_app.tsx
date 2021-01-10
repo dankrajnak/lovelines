@@ -1,5 +1,5 @@
 import { AppProps } from "next/app";
-import "../temp/Styles/globals.less";
+import "../Styles/globals.less";
 import { RecoilRoot } from "recoil";
 import { Provider } from "next-auth/client";
 

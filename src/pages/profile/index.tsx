@@ -3,10 +3,10 @@ import { signIn, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSwr from "swr";
-import CenterLayout from "../../temp/Layout/CenterLayout";
-import NavbarLayout from "../../temp/Layout/NavbarLayout";
+import CenterLayout from "../../Layout/CenterLayout";
+import NavbarLayout from "../../Layout/NavbarLayout";
 import Link from "next/link";
-import SEO from "../../temp/Utilities/SEO";
+import SEO from "../../Utilities/SEO";
 
 const Profile: React.FunctionComponent = () => {
   const [session, loading] = useSession();
