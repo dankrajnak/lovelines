@@ -3,10 +3,11 @@ import Colors from "../Styles/colors";
 import useScrollPosition from "@react-hook/window-scroll";
 import FadeIn from "../UI/FadeIn";
 import { CaretDownOutlined } from "@ant-design/icons";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import Container from "../UI/Container";
+import Link from "next/link";
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const SVG_WIDTH = 768;
 const SVG_HEIGHT = 2367;
@@ -56,8 +57,8 @@ const Home = () => {
               <Title level={1} style={{ textAlign: "center" }}>
                 Hey There.
               </Title>
-              <Paragraph style={{ textAlign: "center" }}>
-                Welcome to LoveLines, an art project to explore and compare our
+              <Paragraph>
+                Welcome to Love Lines, an interactive art project exploring our
                 relationship to love and heartbreak.
               </Paragraph>
             </Container>
@@ -74,11 +75,41 @@ const Home = () => {
       <CenteredAbsolute top="1000px">
         <FadeIn>
           <Container>
-            <Title level={1}>The Shape of Stories</Title>
+            <Title level={1}>Why love and heartbreak?</Title>
             <Paragraph>
-              Think about all the romantic relationships you've had so far.
-              What's the simplest way you could represent them visually?
+              The way that we experience love and heartbreak is intensely
+              personal, yet these experiences are something that we all share
+              in. In other words, love, and unfortunately heartbreak, are
+              experiences which have the unique property of being simultaneously{" "}
+              <Text strong>personal</Text> and <Text strong>universal</Text>.
             </Paragraph>
+            <Paragraph>
+              Focusing on these feelings gives us a chance to tie together
+              intensely personal experiences into a{" "}
+              <Text strong>common visual language</Text>
+            </Paragraph>
+          </Container>
+        </FadeIn>
+      </CenteredAbsolute>
+      <CenteredAbsolute top="1700px">
+        <FadeIn>
+          <Container>
+            <Title level={1}>What does your love story look like?</Title>
+            <Paragraph>
+              This isn't about comparing yourself to others. It's not about
+              verifying that you're on the right path. It's about seeing that
+              you're a part of something.
+            </Paragraph>
+            <Paragraph>
+              To continue, you'll need to sign in. This is mostly so robots
+              can't spam this site. Don't worry, you aren't being tracked, and
+              you don't need to submit any information unless you want to, and
+              any information you share will only be shown to others
+              anonymously.
+            </Paragraph>
+            <Button type="primary">
+              <Link href="/profile">Start</Link>
+            </Button>
           </Container>
         </FadeIn>
       </CenteredAbsolute>
