@@ -3,8 +3,8 @@ import { signIn, useSession } from "next-auth/client";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSwr from "swr";
-import CenterLayout from "../../Layout/CenterLayout";
-import NavbarLayout from "../../Layout/NavbarLayout";
+import CenterLayout from "../../layout/CenterLayout";
+import NavbarLayout from "../../layout/NavbarLayout";
 import Link from "next/link";
 import SEO from "../../Utilities/SEO";
 

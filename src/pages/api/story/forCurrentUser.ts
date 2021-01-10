@@ -1,8 +1,8 @@
 import { Line, Period, Story } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../Server/prisma";
-import withHelpers from "../../../Server/withHelpers";
-import sessionHelper from "../../../Server/withSession";
+import prisma from "../../../server/prisma";
+import withHelpers from "../../../server/withHelpers";
+import sessionHelper from "../../../server/withSession";
 
 export type GetStoryForCurrentUserReturnType = {
   data:
