@@ -8,7 +8,8 @@ module.exports = {
   parser: `@typescript-eslint/parser`,
   rules: {
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": "error",
+    "@typescript-eslint/no-unused-vars": "error",
     "arrow-body-style": ["error", "as-needed"],
     "@typescript-eslint/explicit-function-return-type": 0,
     "typescript/no-unused-expression": 0,
