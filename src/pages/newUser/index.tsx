@@ -1,8 +1,8 @@
 import { Button, Divider, Space, Typography } from "antd";
 
-import CenterLayout from "../../Layout/CenterLayout";
+import CenterLayout from "../../layout/CenterLayout";
 import SEO from "../../Utilities/SEO";
-import NeuCard from "../../UI/NeuCard";
+import NeuCard from "../../ui/NeuCard";
 import withLoggedIn from "../../Utilities/withLoggedIn";
 import Link from "next/link";
 

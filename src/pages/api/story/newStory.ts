@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../../Server/prisma";
-import { APINewStoryRequestSchema } from "../../../Server/apiSchemas";
-import withHelpers from "../../../Server/withHelpers";
-import validationHelper from "../../../Server/withValidate";
-import sessionHelper from "../../../Server/withSession";
+import prisma from "../../../server/prisma";
+import { APINewStoryRequestSchema } from "../../../server/apiSchemas";
+import withHelpers from "../../../server/withHelpers";
+import validationHelper from "../../../server/withValidate";
+import sessionHelper from "../../../server/withSession";
 
 export type NewStoryAPILine = {
   /**
