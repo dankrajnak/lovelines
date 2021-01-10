@@ -65,7 +65,7 @@ const Home = () => {
           </FadeIn>
         </div>
       </CenteredAbsolute>
-      <CenteredAbsolute bottom="10%" top={null}>
+      <CenteredAbsolute bottom="8%" top={null}>
         <FadeIn rootMargin="-90% 0px 0px 0px">
           <div>
             Scroll <CaretDownOutlined />
