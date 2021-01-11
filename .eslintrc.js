@@ -9,7 +9,6 @@ module.exports = {
   rules: {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
-    "@typescript-eslint/no-unused-vars": "error",
     "arrow-body-style": ["error", "as-needed"],
     "@typescript-eslint/explicit-function-return-type": 0,
     "typescript/no-unused-expression": 0,
@@ -20,6 +19,7 @@ module.exports = {
     "jsx-a11y/anchor-is-valid": 0,
     "react/react-in-jsx-scope": 0,
     "object-shorthand": "error",
+    "no-console": ["warn", { allow: ["warn", "error"] }],
   },
   overrides: [
     {
