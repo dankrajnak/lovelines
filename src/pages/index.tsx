@@ -5,7 +5,7 @@ import FadeIn from "../UI/FadeIn";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Typography } from "antd";
 import Container from "../UI/Container";
-import Link from "next/link";
+import { signIn } from "next-auth/client";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -107,8 +107,15 @@ const Home = () => {
               any information you share will only be shown to others
               anonymously.
             </Paragraph>
-            <Button type="primary">
-              <Link href="/profile">Start</Link>
+            <Button
+              type="primary"
+              onClick={() => {
+                signIn(null as any, {
+                  callbackUrl: `http://${window.location.host}/profile`,
+                });
+              }}
+            >
+              Start
             </Button>
           </Container>
         </FadeIn>

@@ -1,13 +1,15 @@
 import { providers, signIn, SessionProvider } from "next-auth/client";
 import CenterLayout from "../../Layout/CenterLayout";
 import Colors from "../../Styles/colors";
-import Logo from "../../UI/Logo";
 import {
   GoogleOutlined,
   FacebookFilled,
   GithubOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
+import { Typography } from "antd";
+
+const { Title, Paragraph } = Typography;
 
 const nameToIcon = {
   Google: <GoogleOutlined />,
@@ -56,14 +58,14 @@ const SignIn = ({
     <>
       <CenterLayout height="100vh">
         <div className="card">
-          <Logo />
+          <Title level={1}>Sign in</Title>
           {errorMessage ? (
-            <div className="error">{errorMessage}</div>
+            <Paragraph className="error">{errorMessage}</Paragraph>
           ) : (
-            <div style={{ textAlign: "center", marginBottom: 8 }}>
+            <Paragraph style={{ textAlign: "center", marginBottom: 8 }}>
               No information is shared with these apps. They are only used to
               securely log you in without a password.
-            </div>
+            </Paragraph>
           )}
           <div className="providers-holder">
             {Object.values(providers).map((provider) => (
