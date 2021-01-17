@@ -1,6 +1,13 @@
-const Container: React.FunctionComponent = ({ children }) => (
+import { CSSProperties } from "react";
+
+const Container: React.FunctionComponent<{ style?: CSSProperties }> = ({
+  children,
+  style,
+}) => (
   <>
-    <div className="container">{children}</div>
+    <div className="container" style={style}>
+      {children}
+    </div>
     <style jsx>{`
       .container {
         width: 90%;

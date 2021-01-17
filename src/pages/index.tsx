@@ -1,11 +1,12 @@
 import SEO from "../Utilities/SEO";
-import Colors from "../Styles/colors";
+import Colors, { ColorsA } from "../Styles/colors";
 import useScrollPosition from "@react-hook/window-scroll";
 import FadeIn from "../UI/FadeIn";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Button, Typography } from "antd";
 import Container from "../UI/Container";
 import { signIn } from "next-auth/client";
+import { CSSProperties } from "react";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -13,6 +14,11 @@ const SVG_WIDTH = 768;
 const SVG_HEIGHT = 1985;
 
 const SCROLL_RATIO = 1.8;
+
+const ContainerStyle: CSSProperties = {
+  backgroundBlendMode: "lighten",
+  backgroundColor: ColorsA.white(0.7),
+};
 
 const CenteredAbsolute: React.FunctionComponent<{
   top?: string | null;
@@ -53,7 +59,7 @@ const Home = () => {
           }}
         >
           <FadeIn>
-            <Container>
+            <Container style={ContainerStyle}>
               <Title level={1} style={{ textAlign: "center" }}>
                 Hey There.
               </Title>
@@ -74,7 +80,7 @@ const Home = () => {
       </CenteredAbsolute>
       <CenteredAbsolute top="100vh">
         <FadeIn>
-          <Container>
+          <Container style={ContainerStyle}>
             <Title level={1}>Why love and heartbreak?</Title>
             <Paragraph>
               The way that we experience love and heartbreak is intensely
@@ -93,7 +99,7 @@ const Home = () => {
       </CenteredAbsolute>
       <CenteredAbsolute top="200vh">
         <FadeIn>
-          <Container>
+          <Container style={ContainerStyle}>
             <Title level={1}>What does your love story look like?</Title>
             <Paragraph>
               This isn't about comparing yourself to others. It's not about
