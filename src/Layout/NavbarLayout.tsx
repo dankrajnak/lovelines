@@ -64,6 +64,10 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
           z-index: 1000;
         }
 
+        .menu a {
+          color: ${Colors.white};
+        }
+
         a.current {
           font-weight: 700;
         }

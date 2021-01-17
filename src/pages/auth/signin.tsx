@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { Typography } from "antd";
+import SEO from "../../Utilities/SEO";
 
 const { Title, Paragraph } = Typography;
 
@@ -56,6 +57,7 @@ const SignIn = ({
   }
   return (
     <>
+      <SEO title="Sign In" />
       <CenterLayout height="100vh">
         <div className="card">
           <Title level={1}>Sign in</Title>
