@@ -19,6 +19,7 @@ const CenterLayout: React.FunctionComponent<{ height?: string }> = ({
       {`
         .holder {
           height: ${height ?? "100%"};
+          min-height: -webkit-fill-available;
         }
       `}
     </style>
