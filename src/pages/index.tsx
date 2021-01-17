@@ -10,9 +10,9 @@ import { signIn } from "next-auth/client";
 const { Title, Paragraph, Text } = Typography;
 
 const SVG_WIDTH = 768;
-const SVG_HEIGHT = 2367;
+const SVG_HEIGHT = 1985;
 
-const SCROLL_RATIO = 1.4;
+const SCROLL_RATIO = 1.8;
 
 const CenteredAbsolute: React.FunctionComponent<{
   top?: string | null;
@@ -72,7 +72,7 @@ const Home = () => {
           </div>
         </FadeIn>
       </CenteredAbsolute>
-      <CenteredAbsolute top="1000px">
+      <CenteredAbsolute top="100vh">
         <FadeIn>
           <Container>
             <Title level={1}>Why love and heartbreak?</Title>
@@ -91,7 +91,7 @@ const Home = () => {
           </Container>
         </FadeIn>
       </CenteredAbsolute>
-      <CenteredAbsolute top="1700px">
+      <CenteredAbsolute top="200vh">
         <FadeIn>
           <Container>
             <Title level={1}>What does your love story look like?</Title>
@@ -125,15 +125,13 @@ const Home = () => {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
-            width={SVG_WIDTH}
-            height={SVG_HEIGHT}
             preserveAspectRatio="xMidYMid slice"
           >
             <path
               d="M 240 0 S 420 0 440 160 S 240 240 240 400 S 386.6667 533.3333 460 600 S 313.3333 706.6667 240 760 S 460 840 520 1000 S 304.6667 1118 197 1177 S 519.6667 1352.3333 600 1439 S 792 1324 643 1293 S 261 1425 251 1538 S 483.6667 1694.6667 600 1773 S 726.6667 1983.6667 662 2082"
               stroke={Colors.red}
-              strokeDashoffset={`${-progress + 100}px`}
-              strokeDasharray={`${progress + 100}px 10000000px`}
+              strokeDashoffset={`${-progress + 1000}px`}
+              strokeDasharray={`${progress + 1000}px 10000000px`}
               strokeWidth="6"
               fill="none"
               strokeMiterlimit="10"
@@ -157,6 +155,7 @@ const Home = () => {
         .path-holder svg {
           width: 100vw;
           max-width: ${SVG_WIDTH}px;
+          height: 260vh;
         }
       `}</style>
     </>

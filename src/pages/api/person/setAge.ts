@@ -25,7 +25,6 @@ export default withHelpers(
     _: NextApiRequest,
     res: NextApiResponse
   ): Promise<void> => {
-    console.log("valid", validated);
     const { year, month, day } = validated;
     const { user } = session;
     const birthdayDate = new Date(year, month, day);
