@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/router";
 import { Typography } from "antd";
 import SEO from "../../Utilities/SEO";
+import Div100vh from "react-div-100vh";
 
 const { Title, Paragraph } = Typography;
 
@@ -58,37 +59,39 @@ const SignIn = ({
   return (
     <>
       <SEO title="Sign In" />
-      <CenterLayout height="100vh">
-        <div className="card">
-          <Title level={1}>Sign in</Title>
-          {errorMessage ? (
-            <Paragraph className="error">{errorMessage}</Paragraph>
-          ) : (
-            <Paragraph style={{ textAlign: "center", marginBottom: 8 }}>
-              No information is shared with these apps. They are only used to
-              securely log you in without a password.
-            </Paragraph>
-          )}
-          <div className="providers-holder">
-            {Object.values(providers).map((provider) => (
-              <button
-                key={provider.id}
-                className="provider-button"
-                onClick={() =>
-                  signIn(provider.id, {
-                    callbackUrl: router.query.callbackUrl as string,
-                  })
-                }
-              >
-                <span style={{ marginRight: 5 }}>
-                  {nameToIcon[provider.name]}
-                </span>
-                {provider.name}
-              </button>
-            ))}
+      <Div100vh>
+        <CenterLayout>
+          <div className="card">
+            <Title level={1}>Sign in</Title>
+            {errorMessage ? (
+              <Paragraph className="error">{errorMessage}</Paragraph>
+            ) : (
+              <Paragraph style={{ textAlign: "center", marginBottom: 8 }}>
+                No information is shared with these apps. They are only used to
+                securely log you in without a password.
+              </Paragraph>
+            )}
+            <div className="providers-holder">
+              {Object.values(providers).map((provider) => (
+                <button
+                  key={provider.id}
+                  className="provider-button"
+                  onClick={() =>
+                    signIn(provider.id, {
+                      callbackUrl: router.query.callbackUrl as string,
+                    })
+                  }
+                >
+                  <span style={{ marginRight: 5 }}>
+                    {nameToIcon[provider.name]}
+                  </span>
+                  {provider.name}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </CenterLayout>
+        </CenterLayout>
+      </Div100vh>
       <style jsx>
         {`
           .card {
