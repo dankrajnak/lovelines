@@ -1,6 +1,6 @@
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import Popover from "react-popover";
-import Colors from "../../Styles/colors";
+import Colors, { ColorsA } from "../../Styles/colors";
 import Circle from "../../UI/Circle";
 import SEO from "../../Utilities/SEO";
 import { List } from "immutable";
@@ -15,13 +15,14 @@ import SecondaryNavButton from "../../UI/SecondaryNavButton";
 import useRequest from "../../Hooks/useRequest";
 import { Story } from "@prisma/client";
 import LOVE_COLORS, { NUM_INTENSITIES } from "../../Utilities/loveColors";
+import React, { useState } from "react";
 
 const CELL_HEIGHT = 40;
 const CELL_MARGIN = 10;
 
 const CELL_WIDTH = 100;
 
-const totalCount = 2000;
+const totalCount = 200;
 const dates = new Array(totalCount).fill(0).map((_, i) => {
   const date = new Date();
   const newMonth = date.getMonth() - (i % 12);
@@ -95,7 +96,7 @@ const LoveCell = (props: {
             padding: 6,
             width: NUM_INTENSITIES * 30,
             justifyContent: "space-between",
-            backgroundColor: Colors.white,
+            backgroundColor: "#f2f0f0",
             display: "flex",
             borderRadius: 2,
             boxShadow:
@@ -104,15 +105,12 @@ const LoveCell = (props: {
         >
           {new Array(NUM_INTENSITIES).fill(0).map((_, i) => (
             <div
+              className="intensity-box"
               onClick={() =>
                 props.onIntensitySelect && props.onIntensitySelect(i)
               }
               key={i}
               style={{
-                width: 20,
-                height: 20,
-                borderRadius: 3,
-                boxShadow: "3px 3px 6px #cbcaca, -3px -3px 6px #ffffff",
                 backgroundColor: props.colorInterpolator(i / NUM_INTENSITIES),
               }}
             ></div>
@@ -133,13 +131,25 @@ const LoveCell = (props: {
       {`
         .cell {
           border-radius: 10px;
-          box-shadow: 11px 11px 22px #c4c3c3, -11px -11px 22px #ffffff;
+          border: 1px ${ColorsA.black(0.7)} solid;
           background-color: ${Colors.white};
           width: ${CELL_WIDTH}px;
           height: ${CELL_HEIGHT}px;
         }
 
         .cell:hover {
+          cursor: pointer;
+        }
+
+        .intensity-box {
+          width: 20px;
+          height: 20px;
+          border-radius: 3px;
+          border: solid 0.5px ${Colors.black};
+        }
+
+        .intensity-box:hover {
+          border: solid 1px ${Colors.black};
           cursor: pointer;
         }
       `}
@@ -150,14 +160,16 @@ const LoveCell = (props: {
           background-color: ${props.colorInterpolator(
             props.intensity / NUM_INTENSITIES
           )};
-          ${props.isSelected ? "border: 1px solid black" : ""}
+          ${props.isSelected ? `border: 1.5px solid ${Colors.black}` : ""}
         }
       `}
     </style>
     <style jsx global>
       {`
         .Popover-tipShape {
-          fill: ${Colors.white};
+          fill: #f2f0f0;
+          box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3),
+            0 15px 12px rgba(0, 0, 0, 0.22);
         }
       `}
     </style>
@@ -425,9 +437,11 @@ const NewStory = () => {
       return resp.json();
     }
   );
+  const [menuHasShadow, setMenuHasShadow] = useState(false);
   return (
     <NavbarLayout>
       <SecondaryNavbarLayout
+        shadow={menuHasShadow}
         buttons={[
           <SecondaryNavButton
             icon={<PlusOutlined />}
@@ -479,6 +493,9 @@ const NewStory = () => {
               rowCount={totalCount}
               rowHeight={CELL_HEIGHT + CELL_MARGIN * 2}
               width={dimensions?.width}
+              onScroll={({ scrollTop }) => {
+                setMenuHasShadow(scrollTop > 0);
+              }}
             >
               {Cell}
             </FixedSizeGrid>

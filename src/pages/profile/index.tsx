@@ -29,7 +29,7 @@ const Profile: React.FunctionComponent = () => {
         <SEO title="Profile" />
         <h1>Hey, {data?.name}</h1>
         <div>
-          <Link href="/profile/newStory">Make a new story</Link>
+          <Link href="/story/newStory">Make a new story</Link>
         </div>
       </CenterLayout>
     </NavbarLayout>

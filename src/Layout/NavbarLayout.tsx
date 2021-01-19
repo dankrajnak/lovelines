@@ -30,6 +30,15 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
                     Profile
                   </a>
                 </Link>
+                <Link href="/story/newStory">
+                  <a
+                    className={
+                      router.pathname.startsWith("/story") ? "current" : ""
+                    }
+                  >
+                    Story
+                  </a>
+                </Link>
               </div>
             </div>
           )}
@@ -52,12 +61,8 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
       <style jsx>{`
         .menu {
           position: fixed;
-          background: ${Colors.black};
-
-          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16),
-            0 3px 6px rgba(0, 0, 0, 0.23);
-
-          color: white;
+          background: ${Colors.white};
+          color: ${Colors.black};
           height: ${NAVBAR_HEIGHT}px;
           top: 0;
           width: 100%;
@@ -65,7 +70,7 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
         }
 
         .menu a {
-          color: ${Colors.white};
+          color: ${Colors.black};
         }
 
         a.current {
@@ -102,7 +107,7 @@ const NavbarLayout: React.FunctionComponent = ({ children }) => {
 
         .sign-button {
           background: none;
-          color: ${Colors.white};
+          color: ${Colors.black};
           border: none;
         }
 
