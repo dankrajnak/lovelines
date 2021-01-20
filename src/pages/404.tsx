@@ -3,9 +3,11 @@ import CenterLayout from "../Layout/CenterLayout";
 import Div100vh from "react-div-100vh";
 import Colors from "../Styles/colors";
 import Link from "next/link";
+import SEO from "../Utilities/SEO";
 
 const FourOhFour = () => (
   <Div100vh>
+    <SEO title="404" />
     <CenterLayout>
       <Result
         title="404"
