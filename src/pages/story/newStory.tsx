@@ -149,7 +149,7 @@ const LoveCell = (props: {
         }
 
         .intensity-box:hover {
-          border: solid 1px ${Colors.black};
+          border: solid 2px ${Colors.black};
           cursor: pointer;
         }
       `}
@@ -160,7 +160,7 @@ const LoveCell = (props: {
           background-color: ${props.colorInterpolator(
             props.intensity / NUM_INTENSITIES
           )};
-          ${props.isSelected ? `border: 1.5px solid ${Colors.black}` : ""}
+          ${props.isSelected ? `border: 2px solid ${Colors.black}` : ""}
         }
       `}
     </style>
