@@ -7,6 +7,7 @@ import { Button, Typography } from "antd";
 import Container from "../UI/Container";
 import { signIn } from "next-auth/client";
 import { CSSProperties } from "react";
+import Div100vh from "react-div-100vh";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -48,28 +49,29 @@ const Home = () => {
     <>
       <SEO />
       <CenteredAbsolute>
-        <div
-          style={{
-            display: "flex",
-            flexGrow: 1,
-            width: 100,
-            height: "100vh",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <FadeIn>
-            <Container style={ContainerStyle}>
-              <Title level={1} style={{ textAlign: "center" }}>
-                Hey There.
-              </Title>
-              <Paragraph>
-                Welcome to Love Lines, an interactive art project exploring our
-                relationship to love and heartbreak.
-              </Paragraph>
-            </Container>
-          </FadeIn>
-        </div>
+        <Div100vh>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <FadeIn>
+              <Container style={ContainerStyle}>
+                <Title level={1} style={{ textAlign: "center" }}>
+                  Hey There.
+                </Title>
+                <Paragraph>
+                  Welcome to Love Lines, an interactive art project exploring
+                  our relationship to love and heartbreak.
+                </Paragraph>
+              </Container>
+            </FadeIn>
+          </div>
+        </Div100vh>
       </CenteredAbsolute>
       <CenteredAbsolute bottom="8%" top={null}>
         <FadeIn rootMargin="-90% 0px 0px 0px">
